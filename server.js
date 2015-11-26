@@ -31,10 +31,6 @@ router.use((req, res, next) => {
   next();
 });
 
-router.get('/', (req, res) => {
-  res.json({message: 'bzv api'});
-});
-
 router.route('/peasant')
   .post((req, res) => {
     var peasant = new Peasant();
@@ -48,7 +44,7 @@ router.route('/peasant')
     });
   })
   .get((req, res) => {
-    Peasant.find(function(err, peasants) {
+    Peasant.find((err, peasants) => {
       if (err) {
         res.send(err);
       }
@@ -91,7 +87,15 @@ router.route('/peasant/:id')
     });
   });
 
+router.use((req, res, next) => {
+  res.status(404).json({message: 'not found', status: 404});
+});
+
 app.use('/api', router);
+
+app.use((req, res, next) => {
+  res.sendfile('index.html', {root: './static'});
+});
 
 app.listen(port);
 console.log('running on http://localhost:' + port);

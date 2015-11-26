@@ -4,6 +4,7 @@
     "test": "node_modules/mocha/bin/mocha test/**/*.js",
     "start": "node server.js"
   },
+  "main": "server.js",
   "devDependencies": {
     "chai": "^3.4.1",
     "mocha": "^2.3.4"
