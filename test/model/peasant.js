@@ -2,6 +2,7 @@
 
 var utils = require('../utils');
 var expect = require('chai').expect;
+
 var Peasant = require('../../lib/model/peasant');
 
 describe('Peasant Model', () => {
@@ -12,7 +13,7 @@ describe('Peasant Model', () => {
       name: 'Foo'
     };
     Peasant.create(peasant, (err, peasant) => {
-      expect(err).to.be.null;
+      expect(err).not.to.be.ok;
       expect(peasant.year).to.equal(2000);
       expect(peasant.name).to.equal('Foo');
       done();
@@ -25,7 +26,7 @@ describe('Peasant Model', () => {
       name: 'Bar'
     };
     Peasant.create(peasant, (err, peasant) => {
-      expect(err).to.be.null;
+      expect(err).not.to.be.ok;
       expect(peasant.year).to.equal(2000);
       expect(peasant.name).to.equal('Bar');
       done();
@@ -34,7 +35,7 @@ describe('Peasant Model', () => {
 
   it('should load Peasants', (done) => {
     Peasant.find((err, peasants) => {
-      expect(err).to.be.null;
+      expect(err).not.to.be.ok;
       expect(peasants.length).to.equal(2);
       done();
     });
@@ -42,11 +43,11 @@ describe('Peasant Model', () => {
 
   it('should edit a Peasant', (done) => {
     Peasant.findOne((err, peasant) => {
-      expect(err).to.be.null;
+      expect(err).not.to.be.ok;
       peasant.name = 'Peasant';
       peasant.year = 1999;
       peasant.save((err, peasant) => {
-        expect(err).to.be.null;
+        expect(err).not.to.be.ok;
         expect(peasant.year).to.equal(1999);
         expect(peasant.name).to.equal('Peasant');
         done();
@@ -56,14 +57,14 @@ describe('Peasant Model', () => {
 
   it('should delete all Peasants', (done) => {
     Peasant.find().remove((err) => {
-      expect(err).to.be.null;
+      expect(err).not.to.be.ok;
       done();
     });
   });
 
   it('should not have Peasants', (done) => {
     Peasant.find((err, peasants) => {
-      expect(err).to.be.null;
+      expect(err).not.to.be.ok;
       expect(peasants.length).to.equal(0);
       done();
     });

@@ -12,7 +12,7 @@ app.disable('x-powered-by');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-var mongoPath = config.db[process.env.NODE_ENV] || config.db.dev;
+var mongoPath = config.db[process.env.NODE_ENV || 'dev'];
 mongoose.connect(mongoPath, (err) => {
   if (err) {
     console.error(err);
@@ -21,7 +21,7 @@ mongoose.connect(mongoPath, (err) => {
   }
 });
 
-var port = process.env.PORT || 8080;
+var port = config.port[process.env.NODE_ENV || 'dev'];
 
 var router = express.Router();
 
@@ -72,7 +72,7 @@ router.route('/peasant/:id')
         if (err) {
           res.send(err);
         }
-        res.json({peasant});
+        res.json(peasant);
       });
     });
   })
@@ -98,4 +98,6 @@ app.use((req, res, next) => {
 });
 
 app.listen(port);
-console.log('running on http://localhost:' + port);
+var url = 'http://localhost:' + port;
+console.log('running on ' + url);
+exports.url = url + '/api/';
