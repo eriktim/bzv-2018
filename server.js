@@ -1,18 +1,23 @@
+'use strict';
+
 var bodyParser = require('body-parser');
 var express = require('express');
 var mongoose = require('mongoose');
-var Peasant = require('./model/peasant');
+
+var config = require('./config');
+var Peasant = require('./lib/model/peasant');
 
 var app = express();
 app.disable('x-powered-by');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-mongoose.connect('mongodb://localhost:27017/bzv', (err) => {
+var mongoPath = config.db[process.env.NODE_ENV] || config.db.dev;
+mongoose.connect(mongoPath, (err) => {
   if (err) {
     console.error(err);
   } else {
-    console.log('connected to mongodb');
+    console.log('connected to ' + mongoPath);
   }
 });
 

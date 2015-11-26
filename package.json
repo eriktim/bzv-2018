@@ -1,8 +1,14 @@
 {
   "name": "bzv",
-  "main": "main.js",
+  "scripts": {
+    "test": "node_modules/mocha/bin/mocha test/**/*.js",
+    "start": "node server.js"
+  },
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4"
+  },
   "dependencies": {
-    "angular2": "2.0.0-alpha.31",
     "body-parser": "^1.0.2",
     "express": "~4.0.0",
     "mongoose": "^3.6.20",
