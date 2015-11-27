@@ -25,13 +25,11 @@ describe('Candidate Model', () => {
 
   it('should create a Candidate', (done) => {
     var candidate = {
-      year: 2000,
       name: 'Foo',
       peasant: myPeasant._id
     };
     Candidate.create(candidate, (err, candidate) => {
       expect(err).not.to.be.ok;
-      expect(candidate.year).to.equal(2000);
       expect(candidate.name).to.equal('Foo');
       expect(candidate.peasant).to.equal(myPeasant._id);
       expect(candidate.updated).to.be.a('Date');
@@ -41,13 +39,11 @@ describe('Candidate Model', () => {
 
   it('should create another Candidate', (done) => {
     var candidate = {
-      year: 2000,
       name: 'Bar',
       peasant: myPeasant._id
     };
     Candidate.create(candidate, (err, candidate) => {
       expect(err).not.to.be.ok;
-      expect(candidate.year).to.equal(2000);
       expect(candidate.name).to.equal('Bar');
       expect(candidate.peasant).to.equal(myPeasant._id);
       expect(candidate.updated).to.be.a('Date');

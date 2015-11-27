@@ -28,7 +28,6 @@ describe('Candidate API', () => {
 
   it('POST /api/candidate', () => {
     var data = {
-      year: 2000,
       name: 'Foo',
       peasant: myPeasant._id
     };
@@ -38,7 +37,6 @@ describe('Candidate API', () => {
         return res.json();
       }).then((candidate) => {
         expect(candidate._id).to.be.ok;
-        expect(candidate.year).to.equal(2000);
         expect(candidate.name).to.equal('Foo');
         expect(candidate.peasant).to.equal(myPeasant._id);
         expect(candidate.updated).to.be.a('string');
@@ -47,7 +45,6 @@ describe('Candidate API', () => {
 
   it('POST /api/candidate', () => {
     var data = {
-      year: 2000,
       name: 'Bar',
       peasant: myPeasant._id
     };
@@ -57,7 +54,6 @@ describe('Candidate API', () => {
         return res.json();
       }).then((candidate) => {
         expect(candidate._id).to.be.ok;
-        expect(candidate.year).to.equal(2000);
         expect(candidate.name).to.equal('Bar');
         expect(candidate.peasant).to.equal(myPeasant._id);
         expect(candidate.updated).to.be.a('string');
