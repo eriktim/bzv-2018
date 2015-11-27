@@ -12,12 +12,16 @@ app.disable('x-powered-by');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
+var verbose = process.env.NODE_ENV != 'test';
+
 var mongoPath = config.db[process.env.NODE_ENV || 'dev'];
 mongoose.connect(mongoPath, (err) => {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log('connected to ' + mongoPath);
+  if (verbose) {
+    if (err) {
+      console.error(err);
+    } else {
+      console.log('connected to ' + mongoPath);
+    }
   }
 });
 
@@ -27,7 +31,9 @@ var router = express.Router();
 
 router.use((req, res, next) => {
   var url = req.protocol + '://' + req.get('host') + req.originalUrl;
-  console.log(req.method + ' ' + url);
+  if (verbose) {
+    console.log(req.method + ' ' + url);
+  }
   next();
 });
 
@@ -41,5 +47,7 @@ app.use((req, res, next) => {
 
 app.listen(port);
 var url = 'http://localhost:' + port;
-console.log('running on ' + url);
+if (verbose) {
+  console.log('running on ' + url);
+}
 exports.url = url + '/api/';
