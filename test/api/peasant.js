@@ -21,6 +21,7 @@ describe('Peasant API', () => {
       }).then((peasant) => {
         expect(peasant.year).to.equal(2000);
         expect(peasant.name).to.equal('Foo');
+        expect(peasant.updated).to.be.a('string');
       });
   });
 
@@ -36,6 +37,7 @@ describe('Peasant API', () => {
       }).then((peasant) => {
         expect(peasant.year).to.equal(2000);
         expect(peasant.name).to.equal('Bar');
+        expect(peasant.updated).to.be.a('string');
       });
   });
 
@@ -60,6 +62,7 @@ describe('Peasant API', () => {
       }).then((peasant) => {
         expect(peasant.year).to.equal(2000);
         expect(peasant.name).to.equal('Peasant');
+        expect(peasant.updated).to.be.a('string');
       });
   });
 

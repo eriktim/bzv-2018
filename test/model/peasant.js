@@ -16,6 +16,7 @@ describe('Peasant Model', () => {
       expect(err).not.to.be.ok;
       expect(peasant.year).to.equal(2000);
       expect(peasant.name).to.equal('Foo');
+      expect(peasant.updated).to.be.a('Date');
       done();
     });
   });
@@ -29,11 +30,12 @@ describe('Peasant Model', () => {
       expect(err).not.to.be.ok;
       expect(peasant.year).to.equal(2000);
       expect(peasant.name).to.equal('Bar');
+      expect(peasant.updated).to.be.a('Date');
       done();
     });
   });
 
-  it('should load Peasants', (done) => {
+  it('should have Peasants', (done) => {
     Peasant.find((err, peasants) => {
       expect(err).not.to.be.ok;
       expect(peasants.length).to.equal(2);
@@ -50,6 +52,7 @@ describe('Peasant Model', () => {
         expect(err).not.to.be.ok;
         expect(peasant.year).to.equal(1999);
         expect(peasant.name).to.equal('Peasant');
+        expect(peasant.updated).to.be.a('Date');
         done();
       });
     });
