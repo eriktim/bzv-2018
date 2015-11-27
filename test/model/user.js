@@ -47,6 +47,34 @@ describe('User Model', () => {
     });
   });
 
+  it('should fail creating an invalid User', (done) => {
+    var user = {
+      year: 2000,
+      name: 'Bar',
+      email: 'no-email',
+      hash: '$hash'
+      // no role
+    };
+    User.create(user, (err) => {
+      expect(err).to.be.ok;
+      done();
+    });
+  });
+
+  it('should fail creating another invalid User', (done) => {
+    var user = {
+      year: 2000,
+      name: 'Bar',
+      email: 'foo@bar.js',
+      hash: '$hash',
+      role: 'anonymous'
+    };
+    User.create(user, (err) => {
+      expect(err).to.be.ok;
+      done();
+    });
+  });
+
   it('should have Users', (done) => {
     User.find((err, users) => {
       expect(err).not.to.be.ok;
