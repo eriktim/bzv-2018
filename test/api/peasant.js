@@ -19,6 +19,7 @@ describe('Peasant API', () => {
         expect(res.ok).to.be.true;
         return res.json();
       }).then((peasant) => {
+        expect(peasant._id).to.be.ok;
         expect(peasant.year).to.equal(2000);
         expect(peasant.name).to.equal('Foo');
         expect(peasant.updated).to.be.a('string');
@@ -35,6 +36,7 @@ describe('Peasant API', () => {
         expect(res.ok).to.be.true;
         return res.json();
       }).then((peasant) => {
+        expect(peasant._id).to.be.ok;
         expect(peasant.year).to.equal(2000);
         expect(peasant.name).to.equal('Bar');
         expect(peasant.updated).to.be.a('string');
@@ -60,7 +62,7 @@ describe('Peasant API', () => {
         expect(res.ok).to.be.true;
         return res.json();
       }).then((peasant) => {
-        expect(peasant.year).to.equal(2000);
+        expect(peasant._id).to.be.ok;
         expect(peasant.name).to.equal('Peasant');
         expect(peasant.updated).to.be.a('string');
       });

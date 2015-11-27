@@ -37,6 +37,7 @@ describe('Candidate API', () => {
         expect(res.ok).to.be.true;
         return res.json();
       }).then((candidate) => {
+        expect(candidate._id).to.be.ok;
         expect(candidate.year).to.equal(2000);
         expect(candidate.name).to.equal('Foo');
         expect(candidate.peasant).to.equal(myPeasant._id);
@@ -55,6 +56,7 @@ describe('Candidate API', () => {
         expect(res.ok).to.be.true;
         return res.json();
       }).then((candidate) => {
+        expect(candidate._id).to.be.ok;
         expect(candidate.year).to.equal(2000);
         expect(candidate.name).to.equal('Bar');
         expect(candidate.peasant).to.equal(myPeasant._id);
@@ -81,7 +83,7 @@ describe('Candidate API', () => {
         expect(res.ok).to.be.true;
         return res.json();
       }).then((candidate) => {
-        expect(candidate.year).to.equal(2000);
+        expect(candidate._id).to.be.ok;
         expect(candidate.name).to.equal('Candidate');
         expect(candidate.updated).to.be.a('string');
       });

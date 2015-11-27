@@ -46,8 +46,8 @@ describe('Peasant Model', () => {
   it('should edit a Peasant', (done) => {
     Peasant.findOne((err, peasant) => {
       expect(err).not.to.be.ok;
-      peasant.name = 'Peasant';
       peasant.year = 1999;
+      peasant.name = 'Peasant';
       peasant.save((err, peasant) => {
         expect(err).not.to.be.ok;
         expect(peasant.year).to.equal(1999);

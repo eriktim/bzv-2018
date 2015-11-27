@@ -66,8 +66,8 @@ describe('Candidate Model', () => {
   it('should edit a Candidate', (done) => {
     Candidate.findOne((err, candidate) => {
       expect(err).not.to.be.ok;
-      candidate.name = 'Candidate';
       candidate.year = 1999;
+      candidate.name = 'Candidate';
       candidate.save((err, candidate) => {
         expect(err).not.to.be.ok;
         expect(candidate.year).to.equal(1999);

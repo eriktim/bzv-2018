@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var config = require('./config');
 var candidate = require('./lib/rest/candidate');
 var peasant = require('./lib/rest/peasant');
+var user = require('./lib/rest/user');
 
 var app = express();
 app.disable('x-powered-by');
@@ -40,6 +41,7 @@ router.use((req, res, next) => {
 
 candidate.bind(router);
 peasant.bind(router);
+user.bind(router);
 
 router.use((req, res, next) => {
   res.status(404).json({message: 'not found', status: 404});
