@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var config = require('./config');
 var candidate = require('./lib/rest/candidate');
 var peasant = require('./lib/rest/peasant');
+var period = require('./lib/rest/period');
 var user = require('./lib/rest/user');
 
 var app = express();
@@ -41,6 +42,7 @@ router.use((req, res, next) => {
 
 candidate.bind(router);
 peasant.bind(router);
+period.bind(router);
 user.bind(router);
 
 router.use((req, res, next) => {
