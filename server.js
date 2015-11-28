@@ -9,6 +9,7 @@ var candidate = require('./lib/rest/candidate');
 var peasant = require('./lib/rest/peasant');
 var period = require('./lib/rest/period');
 var user = require('./lib/rest/user');
+var vote = require('./lib/rest/vote');
 
 var app = express();
 app.disable('x-powered-by');
@@ -44,6 +45,7 @@ candidate.bind(router);
 peasant.bind(router);
 period.bind(router);
 user.bind(router);
+vote.bind(router);
 
 router.use((req, res, next) => {
   res.status(404).json({message: 'not found', status: 404});
