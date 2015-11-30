@@ -3,6 +3,7 @@
 var utils = require('../utils');
 var expect = require('chai').expect;
 var fetch = require('node-fetch');
+var moment = require('moment');
 var url = utils.url;
 
 describe('Vote API', () => {
@@ -35,8 +36,8 @@ describe('Vote API', () => {
     };
     var period = {
       year: year,
-      start: '2000-01-01',
-      end: '2000-02-01',
+      start: moment().subtract(1, 'day').format('YYYY-MM-DD'),
+      end: moment().add(1, 'day').format('YYYY-MM-DD'),
       numberOfVotes: 3
     };
     return fetch(url + 'peasant', utils.post(peasant))

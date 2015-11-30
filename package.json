@@ -2,8 +2,8 @@
   "name": "bzv",
   "description": "bzv",
   "repository": {
-    "type": "git"
-  , "url": "https://github.com/gingerik/bzv.git"
+    "type": "git",
+    "url": "https://github.com/gingerik/bzv.git"
   },
   "scripts": {
     "test": "node_modules/mocha/bin/mocha test/**/*.js",
@@ -19,6 +19,7 @@
   "dependencies": {
     "body-parser": "1.x.x",
     "express": "4.0.x",
+    "moment": "2.x.x",
     "mongoose": "4.2.x",
     "traceur": "0.x.x"
   },

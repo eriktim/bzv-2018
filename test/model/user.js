@@ -2,6 +2,7 @@
 
 var utils = require('../utils');
 var expect = require('chai').expect;
+var moment = require('moment');
 
 var Candidate = require('../../lib/model/candidate');
 var Peasant = require('../../lib/model/peasant');
@@ -158,8 +159,8 @@ describe('User Model', () => {
           candidateB = values.shift();
           return Period.create({
             year: year,
-            start: '2000-01-01',
-            end: '2000-02-01',
+            start: moment().subtract(1, 'day'),
+            end: moment().add(1, 'day'),
             numberOfVotes: 1
           });
         })

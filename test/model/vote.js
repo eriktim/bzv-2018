@@ -2,6 +2,7 @@
 
 var utils = require('../utils');
 var expect = require('chai').expect;
+var moment = require('moment');
 
 var Candidate = require('../../lib/model/candidate');
 var Peasant = require('../../lib/model/peasant');
@@ -38,8 +39,8 @@ describe('Vote Model', () => {
     };
     var period = {
       year: year,
-      start: '2000-01-01', // TODO now -x
-      end: '2000-02-01', // TODO now +x
+      start: moment().subtract(1, 'day'),
+      end: moment().add(1, 'day'),
       numberOfVotes: 3
     };
     Peasant.create(peasant)
@@ -139,23 +140,158 @@ describe('Vote Model', () => {
       });
   });
 
-  after((done) => {
-    myPeriod.remove()
+  describe('should have restrictions', () => {
+
+    var candidateA;
+    var candidateB;
+    var peasant;
+    var period;
+    var user;
+
+    before((done) => {
+      Promise.resolve()
+        .then(() => {
+          return Promise.all([
+            Candidate.remove().exec(),
+            Peasant.remove().exec(),
+            Period.remove().exec(),
+            User.remove().exec(),
+            Vote.remove().exec()
+          ]);
+        })
+        .then(() => {
+          return Peasant.create({
+            year: 2000,
+            name: 'Peasant'
+          });
+        })
+        .then((res) => {
+          peasant = res;
+          return Promise.all([
+            Candidate.create({
+              name: 'CandidateA',
+              peasant: peasant._id
+            }),
+            Candidate.create({
+              name: 'CandidateB',
+              peasant: peasant._id
+            })
+          ]);
+        })
+        .then((values) => {
+          candidateA = values.shift();
+          candidateB = values.shift();
+          return User.create({
+            year: 2000,
+            name: 'User',
+            email: 'user@bzv.js',
+            hash: '$hash',
+          });
+        })
+        .then((res) => {
+          user = res;
+          return Promise.all([
+            Peasant.find().exec(),
+            Candidate.find().exec(),
+            User.find().exec()
+          ]);
+        })
+        .then((values) => {
+          expect(values[0].length).to.equal(1);
+          expect(values[1].length).to.equal(2);
+          expect(values[2].length).to.equal(1);
+        })
+        .then(() => {
+          done();
+        });
+    });
+
+    it('should vote within a period', (done) => {
+      Promise.resolve()
       .then(() => {
-        return myUser.remove();
+        return Period.create({
+          year: 2000,
+          start: moment().subtract(1, 'week'),
+          end: moment().subtract(1, 'day'),
+          numberOfVotes: 1
+        });
       })
-      .then(() => {
-        return Promise.all([
-          myCandidateA.remove(),
-          myCandidateB.remove()
-        ]);
+      .then((period) => {
+        return Vote.create({
+          candidate: candidateA._id,
+          period: period._id,
+          user: user._id,
+          type: 'love'
+        });
       })
-      .then(() => {
-        return myPeasant.remove();
-      })
-      .then(() => {
+      .catch((reason) => {
+        expect(reason.toString()).to.equal(
+            'Error: voting period has been closed');
         done();
       });
+    });
+
+    it('should vote only once', (done) => {
+      var checkPoints = 0;
+      Promise.resolve()
+        .then(() => {
+          return Period.create({
+            year: 2000,
+            start: moment().subtract(1, 'day'),
+            end: moment().add(1, 'day'),
+            numberOfVotes: 1
+          });
+        })
+        .then((res) => {
+          period = res;
+          return Vote.create({
+            candidate: candidateA._id,
+            period: period._id,
+            user: user._id,
+            type: 'love'
+          });
+        })
+        .then(() => {
+          checkPoints++;
+          return Vote.create({
+            candidate: candidateA._id,
+            period: period._id,
+            user: user._id,
+            type: 'good'
+          });
+        })
+        .catch((reason) => {
+          expect(reason.toString()).to.equal('Error: votes must be unique');
+          checkPoints++;
+        })
+        .then(() => {
+          return Vote.create({
+            candidate: candidateB._id,
+            period: period._id,
+            user: user._id,
+            type: 'bad'
+          });
+        })
+        .then(() => {
+          checkPoints++;
+          expect(checkPoints).to.equal(3);
+          done();
+        });
+    });
+
+    after((done) => {
+      Candidate.find().remove().exec()
+        .then(() => {
+          return Promise.all([
+            Peasant.find().remove().exec(),
+            Period.find().remove().exec()
+          ]);
+        })
+        .then(() => {
+          done();
+        });
+    });
+
   });
 
 });
