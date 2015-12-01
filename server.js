@@ -3,6 +3,7 @@
 var bodyParser = require('body-parser');
 var express = require('express');
 var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 
 var config = require('./config');
 var candidate = require('./lib/rest/candidate');

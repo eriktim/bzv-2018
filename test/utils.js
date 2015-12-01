@@ -3,6 +3,7 @@
 process.env.NODE_ENV = 'test';
 
 var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 var formurlencoded = require('form-urlencoded');
 
 var config = require('../config');
@@ -22,31 +23,32 @@ var urlEncodedRequest = function(method) {
 exports.post = urlEncodedRequest('POST');
 exports.put = urlEncodedRequest('PUT');
 
-before((done) => {
+before(() => {
 
-  var clearDB = function() {
-    for (var i in mongoose.connection.collections) {
-      mongoose.connection.collections[i].remove(() => {});
-    }
-    return done();
-  };
-
-  if (mongoose.connection.readyState === 0) {
-    mongoose.connect(config.db.test, (err) => {
-      if (err) {
-        throw err;
+  return new Promise((resolve) => {
+    var clearDatabase = function() {
+      for (var i in mongoose.connection.collections) {
+        mongoose.connection.collections[i].remove(() => {});
       }
-      return clearDB();
-    });
-  } else {
-    return clearDB();
-  }
+      resolve();
+    };
+
+    if (mongoose.connection.readyState === 0) {
+      mongoose.connect(config.db.test, (err) => {
+        if (err) {
+          throw err;
+        }
+        clearDatabase();
+      });
+    } else {
+      clearDatabase();
+    }
+  });
 
 });
 
-after((done) => {
+after(() => {
 
   mongoose.disconnect();
-  return done();
 
 });

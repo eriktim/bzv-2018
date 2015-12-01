@@ -12,7 +12,7 @@ var Vote = require('../../lib/model/vote');
 
 describe('User Model', () => {
 
-  it('should create a User', (done) => {
+  it('should create a User', () => {
     var user = {
       year: 2000,
       name: 'Foo',
@@ -20,19 +20,18 @@ describe('User Model', () => {
       hash: '$hash',
       role: 'admin'
     };
-    User.create(user, (err, user) => {
-      expect(err).not.to.be.ok;
-      expect(user.year).to.equal(2000);
-      expect(user.name).to.equal('Foo');
-      expect(user.email).to.equal('foo@bar.js');
-      expect(user.hash).to.equal('$hash');
-      expect(user.role).to.equal('admin');
-      expect(user.updated).to.be.a('Date');
-      done();
-    });
+    return User.create(user)
+      .then((user) => {
+        expect(user.year).to.equal(2000);
+        expect(user.name).to.equal('Foo');
+        expect(user.email).to.equal('foo@bar.js');
+        expect(user.hash).to.equal('$hash');
+        expect(user.role).to.equal('admin');
+        expect(user.updated).to.be.a('Date');
+      });
   });
 
-  it('should create another User', (done) => {
+  it('should create another User', () => {
     var user = {
       year: 2000,
       name: 'Bar',
@@ -40,19 +39,18 @@ describe('User Model', () => {
       hash: '$hash'
       // no role
     };
-    User.create(user, (err, user) => {
-      expect(err).not.to.be.ok;
-      expect(user.year).to.equal(2000);
-      expect(user.name).to.equal('Bar');
-      expect(user.email).to.equal('bar@foo.js');
-      expect(user.hash).to.equal('$hash');
-      expect(user.role).to.equal('user');
-      expect(user.updated).to.be.a('Date');
-      done();
-    });
+    return User.create(user)
+      .then((user) => {
+        expect(user.year).to.equal(2000);
+        expect(user.name).to.equal('Bar');
+        expect(user.email).to.equal('bar@foo.js');
+        expect(user.hash).to.equal('$hash');
+        expect(user.role).to.equal('user');
+        expect(user.updated).to.be.a('Date');
+      });
   });
 
-  it('should fail creating an invalid User', (done) => {
+  it('should fail creating an invalid User', () => {
     var user = {
       year: 2000,
       name: 'Bar',
@@ -60,13 +58,19 @@ describe('User Model', () => {
       hash: '$hash'
       // no role
     };
-    User.create(user, (err) => {
-      expect(err).to.be.ok;
-      done();
-    });
+    var failed = false;
+    return User.create(user)
+      .catch((reason) => {
+        expect(reason.toString()).to.equal(
+            'ValidationError: Path `email` is invalid (no-email).');
+        failed = true;
+      })
+      .then(() => {
+        expect(failed).to.be.true;
+      });
   });
 
-  it('should fail creating another invalid User', (done) => {
+  it('should fail creating another invalid User', () => {
     var user = {
       year: 2000,
       name: 'Bar',
@@ -74,54 +78,55 @@ describe('User Model', () => {
       hash: '$hash',
       role: 'anonymous'
     };
-    User.create(user, (err) => {
-      expect(err).to.be.ok;
-      done();
-    });
+    var failed = false;
+    return User.create(user)
+      .catch((reason) => {
+        expect(reason.toString()).to.equal(
+            'ValidationError: `anonymous` is not a ' +
+            'valid enum value for path `role`.');
+        failed = true;
+      })
+      .then(() => {
+        expect(failed).to.be.true;
+      });
   });
 
-  it('should have Users', (done) => {
-    User.find((err, users) => {
-      expect(err).not.to.be.ok;
-      expect(users.length).to.equal(2);
-      done();
-    });
+  it('should have Users', () => {
+    return User.find()
+      .then((users) => {
+        expect(users.length).to.equal(2);
+      });
   });
 
-  it('should edit a User', (done) => {
-    User.findOne((err, user) => {
-      expect(err).not.to.be.ok;
-      user.year = 1999;
-      user.name = 'User';
-      user.email = 'user@foo.bar';
-      user.hash = '#hash';
-      user.role = 'visitor';
-      user.save((err, user) => {
-        expect(err).not.to.be.ok;
+  it('should edit a User', () => {
+    return User.findOne()
+      .then((user) => {
+        user.year = 1999;
+        user.name = 'User';
+        user.email = 'user@foo.bar';
+        user.hash = '#hash';
+        user.role = 'visitor';
+        return user.save();
+      })
+      .then((user) => {
         expect(user.year).to.equal(1999);
         expect(user.name).to.equal('User');
         expect(user.email).to.equal('user@foo.bar');
         expect(user.hash).to.equal('#hash');
         expect(user.role).to.equal('visitor');
         expect(user.updated).to.be.a('Date');
-        done();
       });
-    });
   });
 
-  it('should delete all Users', (done) => {
-    User.find().remove((err) => {
-      expect(err).not.to.be.ok;
-      done();
-    });
+  it('should delete all Users', () => {
+    return User.remove();
   });
 
-  it('should not have Users', (done) => {
-    User.find((err, users) => {
-      expect(err).not.to.be.ok;
-      expect(users.length).to.equal(0);
-      done();
-    });
+  it('should not have Users', () => {
+    return User.find()
+      .then((users) => {
+        expect(users.length).to.equal(0);
+      });
   });
 
   describe('should cleanup nicely', () => {
@@ -132,114 +137,103 @@ describe('User Model', () => {
     var period;
     var user;
 
-    before((done) => {
+    before(() => {
       var year = 2000;
-      Promise.resolve()
-        .then(() => {
-          return Peasant.create({
-            year: year,
-            name: 'Peasant'
-          });
-        })
-        .then((res) => {
-          peasant = res;
-          return Promise.all([
-            Candidate.create({
-              name: 'CandidateA',
-              peasant: peasant._id
-            }),
-            Candidate.create({
-              name: 'CandidateB',
-              peasant: peasant._id
-            })
-          ]);
-        })
-        .then((values) => {
-          candidateA = values.shift();
-          candidateB = values.shift();
-          return Period.create({
-            year: year,
-            start: moment().subtract(1, 'day'),
-            end: moment().add(1, 'day'),
-            numberOfVotes: 1
-          });
-        })
-        .then((res) => {
-          period = res;
-          return User.create({
-            year: year,
-            name: 'User',
-            email: 'user@bzv.js',
-            hash: '$hash',
-          });
-        })
-        .then((res) => {
-          user = res;
-          return Promise.all([
-            Vote.create({
-              candidate: candidateA._id,
-              period: period._id,
-              user: user._id,
-              type: 'love'
-            }),
-            Vote.create({
-              candidate: candidateB._id,
-              period: period._id,
-              user: user._id,
-              type: 'bad'
-            })
-          ]);
-        })
-        .then((values) => {
-          return Promise.all([
-            Peasant.find().exec(),
-            Candidate.find().exec(),
-            Period.find().exec(),
-            User.find().exec(),
-            Vote.find().exec()
-          ]);
-        })
-        .then((values) => {
-          expect(values[0].length).to.equal(1);
-          expect(values[1].length).to.equal(2);
-          expect(values[2].length).to.equal(1);
-          expect(values[3].length).to.equal(1);
-          expect(values[4].length).to.equal(2);
-        })
-        .then(() => {
-          return user.remove();
-        })
-        .then(() => {
-          done();
+      return Peasant.create({
+        year: year,
+        name: 'Peasant'
+      })
+      .then((res) => {
+        peasant = res;
+        return Promise.all([
+          Candidate.create({
+            name: 'CandidateA',
+            peasant: peasant._id
+          }),
+          Candidate.create({
+            name: 'CandidateB',
+            peasant: peasant._id
+          })
+        ]);
+      })
+      .then((values) => {
+        candidateA = values.shift();
+        candidateB = values.shift();
+        return Period.create({
+          year: year,
+          start: moment().subtract(1, 'day'),
+          end: moment().add(1, 'day'),
+          numberOfVotes: 1
         });
+      })
+      .then((res) => {
+        period = res;
+        return User.create({
+          year: year,
+          name: 'User',
+          email: 'user@bzv.js',
+          hash: '$hash',
+        });
+      })
+      .then((res) => {
+        user = res;
+        return Promise.all([
+          Vote.create({
+            candidate: candidateA._id,
+            period: period._id,
+            user: user._id,
+            type: 'love'
+          }),
+          Vote.create({
+            candidate: candidateB._id,
+            period: period._id,
+            user: user._id,
+            type: 'bad'
+          })
+        ]);
+      })
+      .then((values) => {
+        return Promise.all([
+          Peasant.find(),
+          Candidate.find(),
+          Period.find(),
+          User.find(),
+          Vote.find()
+        ]);
+      })
+      .then((values) => {
+        expect(values[0].length).to.equal(1);
+        expect(values[1].length).to.equal(2);
+        expect(values[2].length).to.equal(1);
+        expect(values[3].length).to.equal(1);
+        expect(values[4].length).to.equal(2);
+      })
+      .then(() => {
+        return user.remove();
+      });
     });
 
-    it('should remove Users', (done) => {
-      User.find().exec()
+    it('should remove Users', () => {
+      return User.find()
         .then((users) => {
           expect(users.length).to.equal(0);
-          done();
         });
     });
 
-    it('should remove Votes', (done) => {
-      Vote.find().exec()
+    it('should remove Votes', () => {
+      return Vote.find()
         .then((votes) => {
           expect(votes.length).to.equal(0);
-          done();
         });
     });
 
-    after((done) => {
-      Candidate.find().remove().exec()
+    after(() => {
+      return Candidate.remove()
         .then(() => {
           return Promise.all([
-            Peasant.find().remove().exec(),
-            Period.find().remove().exec()
+            Peasant.remove(),
+            Period.remove()
           ]);
-        })
-        .then(() => {
-          done();
         });
     });
 

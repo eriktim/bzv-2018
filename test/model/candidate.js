@@ -14,83 +14,74 @@ describe('Candidate Model', () => {
 
   var myPeasant;
 
-  before((done) => {
+  before(() => {
     var peasant = {
       year: 2000,
       name: 'Peasant'
     };
-    Peasant.create(peasant, (err, peasant) => {
-      expect(err).not.to.be.ok;
-      expect(peasant._id).to.be.ok;
-      myPeasant = peasant;
-      done();
-    });
+    return Peasant.create(peasant)
+      .then((peasant) => {
+        expect(peasant._id).to.be.ok;
+        myPeasant = peasant;
+      });
   });
 
-  it('should create a Candidate', (done) => {
+  it('should create a Candidate', () => {
     var candidate = {
       name: 'Foo',
       peasant: myPeasant._id
     };
-    Candidate.create(candidate, (err, candidate) => {
-      expect(err).not.to.be.ok;
-      expect(candidate.name).to.equal('Foo');
-      expect(candidate.peasant).to.equal(myPeasant._id);
-      expect(candidate.updated).to.be.a('Date');
-      done();
-    });
+    return Candidate.create(candidate)
+      .then((candidate) => {
+        expect(candidate.name).to.equal('Foo');
+        expect(candidate.peasant).to.equal(myPeasant._id);
+        expect(candidate.updated).to.be.a('Date');
+      });
   });
 
-  it('should create another Candidate', (done) => {
+  it('should create another Candidate', () => {
     var candidate = {
       name: 'Bar',
       peasant: myPeasant._id
     };
-    Candidate.create(candidate, (err, candidate) => {
-      expect(err).not.to.be.ok;
-      expect(candidate.name).to.equal('Bar');
-      expect(candidate.peasant).to.equal(myPeasant._id);
-      expect(candidate.updated).to.be.a('Date');
-      done();
-    });
+    return Candidate.create(candidate)
+      .then((candidate) => {
+        expect(candidate.name).to.equal('Bar');
+        expect(candidate.peasant).to.equal(myPeasant._id);
+        expect(candidate.updated).to.be.a('Date');
+      });
   });
 
-  it('should have Candidates', (done) => {
-    Candidate.find((err, candidates) => {
-      expect(err).not.to.be.ok;
-      expect(candidates.length).to.equal(2);
-      done();
-    });
+  it('should have Candidates', () => {
+    return Candidate.find()
+      .then((candidates) => {
+        expect(candidates.length).to.equal(2);
+      });
   });
 
-  it('should edit a Candidate', (done) => {
-    Candidate.findOne((err, candidate) => {
-      expect(err).not.to.be.ok;
-      candidate.year = 1999;
-      candidate.name = 'Candidate';
-      candidate.save((err, candidate) => {
-        expect(err).not.to.be.ok;
+  it('should edit a Candidate', () => {
+    return Candidate.findOne()
+      .then((candidate) => {
+        candidate.year = 1999;
+        candidate.name = 'Candidate';
+        return candidate.save();
+      })
+      .then((candidate) => {
         expect(candidate.year).to.equal(1999);
         expect(candidate.name).to.equal('Candidate');
         expect(candidate.updated).to.be.a('Date');
-        done();
       });
-    });
   });
 
-  it('should delete all Candidates', (done) => {
-    Candidate.find().remove((err) => {
-      expect(err).not.to.be.ok;
-      done();
-    });
+  it('should delete all Candidates', () => {
+    return Candidate.remove();
   });
 
-  it('should not have Candidates', (done) => {
-    Candidate.find((err, candidates) => {
-      expect(err).not.to.be.ok;
-      expect(candidates.length).to.equal(0);
-      done();
-    });
+  it('should not have Candidates', () => {
+    return Candidate.find()
+      .then((candidates) => {
+        expect(candidates.length).to.equal(0);
+      });
   });
 
   describe('should cleanup nicely', () => {
@@ -101,12 +92,9 @@ describe('Candidate Model', () => {
     var period;
     var user;
 
-    before((done) => {
+    before(() => {
       var year = 2000;
-      Promise.resolve()
-        .then(() => {
-          return Peasant.remove();
-        })
+      return Peasant.remove()
         .then(() => {
           return Peasant.create({
             year: year,
@@ -164,11 +152,11 @@ describe('Candidate Model', () => {
         })
         .then((values) => {
           return Promise.all([
-            Peasant.find().exec(),
-            Candidate.find().exec(),
-            Period.find().exec(),
-            User.find().exec(),
-            Vote.find().exec()
+            Peasant.find(),
+            Candidate.find(),
+            Period.find(),
+            User.find(),
+            Vote.find()
           ]);
         })
         .then((values) => {
@@ -183,37 +171,29 @@ describe('Candidate Model', () => {
             candidateA.remove(),
             candidateB.remove()
           ]);
-        })
-        .then(() => {
-          done();
         });
     });
 
-    it('should remove Candidates', (done) => {
-      Candidate.find().exec()
+    it('should remove Candidates', () => {
+      return Candidate.find()
         .then((candidates) => {
           expect(candidates.length).to.equal(0);
-          done();
         });
     });
 
-    it('should remove Votes', (done) => {
-      Vote.find().exec()
+    it('should remove Votes', () => {
+      return Vote.find()
         .then((votes) => {
           expect(votes.length).to.equal(0);
-          done();
         });
     });
 
-    after((done) => {
+    after(() => {
       return Promise.all([
-        Peasant.find().remove().exec(),
-        Period.find().remove().exec(),
-        User.find().remove().exec()
-      ])
-      .then(() => {
-        done();
-      });
+        Peasant.remove(),
+        Period.remove(),
+        User.remove()
+      ]);
     });
 
   });
