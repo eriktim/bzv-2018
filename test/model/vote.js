@@ -261,6 +261,37 @@ describe('Vote Model', () => {
       });
     });
 
+    it('should not vote on dropped candidates', () => {
+      var failed = false;
+      candidateB.dropped = moment().subtract(1, 'day');
+      return Promise.all([
+        Period.create({
+          year: 2000,
+          start: moment().subtract(1, 'week'),
+          end: moment().add(1, 'week'),
+          numberOfVotes: 1
+        }),
+		candidateB.save()
+      ])
+      .then((values) => {
+        var period = values.shift();
+        return Vote.create({
+          candidate: candidateB._id,
+          period: period._id,
+          user: user._id,
+          type: 'love'
+        });
+      })
+      .catch((reason) => {
+        expect(reason.toString()).to.equal(
+            'Error: candidate was already dropped');
+        failed = true;
+      })
+      .then(() => {
+        expect(failed).to.be.true;
+      });
+    });
+
     after(() => {
       return Candidate.remove()
         .then(() => {
