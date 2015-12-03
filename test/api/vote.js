@@ -92,7 +92,9 @@ describe('Vote API', () => {
       candidate: myCandidateA._id,
       period: myPeriod._id,
       user: myUser._id,
-      type: 'love'
+      type: 'love',
+      points: 500,
+      bonusPoints: 500
     };
     return fetch(url + 'vote', utils.post(data))
       .then((res) => {
@@ -104,6 +106,8 @@ describe('Vote API', () => {
         expect(vote.period).to.equal(myPeriod._id);
         expect(vote.user).to.equal(myUser._id);
         expect(vote.type).to.equal('love');
+        expect(vote.points).to.equal(0);
+        expect(vote.bonusPoints).to.equal(0);
         expect(vote.updated).to.be.a('string');
       });
   });
@@ -125,6 +129,8 @@ describe('Vote API', () => {
         expect(vote.period).to.equal(myPeriod._id);
         expect(vote.user).to.equal(myUser._id);
         expect(vote.type).to.equal('good');
+        expect(vote.points).to.equal(0);
+        expect(vote.bonusPoints).to.equal(0);
         expect(vote.updated).to.be.a('string');
       });
   });

@@ -80,6 +80,8 @@ describe('Vote Model', () => {
         expect(vote.period).to.equal(myPeriod._id);
         expect(vote.user).to.equal(myUser._id);
         expect(vote.type).to.equal('love');
+        expect(vote.points).to.equal(0);
+        expect(vote.bonusPoints).to.equal(0);
         expect(vote.updated).to.be.a('Date');
       });
   });
@@ -97,6 +99,8 @@ describe('Vote Model', () => {
         expect(vote.period).to.equal(myPeriod._id);
         expect(vote.user).to.equal(myUser._id);
         expect(vote.type).to.equal('good');
+        expect(vote.points).to.equal(0);
+        expect(vote.bonusPoints).to.equal(0);
         expect(vote.updated).to.be.a('Date');
       });
   });
@@ -289,6 +293,35 @@ describe('Vote Model', () => {
       })
       .then(() => {
         expect(failed).to.be.true;
+      });
+    });
+
+    it('should collect points', () => {
+      return Period.create({
+        year: 2000,
+        start: moment().subtract(1, 'week'),
+        end: moment().add(1, 'week'),
+        reference: moment().add(8, 'days'),
+        numberOfVotes: 3
+      })
+      .then((period) => {
+        return Vote.create({
+          candidate: candidateA._id,
+          period: period._id,
+          user: user._id,
+          type: 'bad'
+        });
+      })
+      .then((vote) => {
+        candidateA.dropped = moment();
+        return candidateA.save()
+          .then(() => {
+            return Vote.findOne({_id: vote._id});
+          });
+      })
+      .then((vote) => {
+        expect(vote.points).to.equal(1);
+        expect(vote.bonusPoints).to.equal(0);
       });
     });
 
