@@ -14,7 +14,7 @@ describe('User API', () => {
       year: 2000,
       name: 'Foo',
       email: 'foo@bar.js',
-      hash: '$hash',
+      password: 'password',
       role: 'admin'
     };
     return fetch(url + 'user', utils.post(data))
@@ -26,7 +26,8 @@ describe('User API', () => {
         expect(user.year).to.equal(2000);
         expect(user.name).to.equal('Foo');
         expect(user.email).to.equal('foo@bar.js');
-        expect(user.hash).to.equal('$hash');
+        expect(user.hash).to.be.undefined;
+        expect(user.password).to.be.undefined;
         expect(user.role).to.equal('admin');
         expect(user.updated).to.be.a('string');
       });
@@ -37,7 +38,7 @@ describe('User API', () => {
       year: 2000,
       name: 'Bar',
       email: 'bar@foo.js',
-      hash: '$hash'
+      password: 'password'
       // no role
     };
     return fetch(url + 'user', utils.post(data))
@@ -49,7 +50,8 @@ describe('User API', () => {
         expect(user.year).to.equal(2000);
         expect(user.name).to.equal('Bar');
         expect(user.email).to.equal('bar@foo.js');
-        expect(user.hash).to.equal('$hash');
+        expect(user.hash).to.be.undefined;
+        expect(user.password).to.be.undefined;
         expect(user.role).to.equal('user');
         expect(user.updated).to.be.a('string');
       });
@@ -71,7 +73,7 @@ describe('User API', () => {
     user.year = 1999;
     user.name = 'User';
     user.email = 'user@foo.bar';
-    user.hash = '#hash';
+    user.password = 'password';
     user.role = 'visitor';
     return fetch(url + 'user/' + user._id, utils.put(user))
       .then((res) => {
@@ -82,7 +84,8 @@ describe('User API', () => {
         expect(user.year).to.equal(1999);
         expect(user.name).to.equal('User');
         expect(user.email).to.equal('user@foo.bar');
-        expect(user.hash).to.equal('#hash');
+        expect(user.hash).to.be.undefined;
+        expect(user.password).to.be.undefined;
         expect(user.role).to.equal('visitor');
         expect(user.updated).to.be.a('string');
       });

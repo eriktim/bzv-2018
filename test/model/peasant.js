@@ -113,7 +113,7 @@ describe('Peasant Model', () => {
           year: year,
           name: 'User',
           email: 'user@bzv.js',
-          hash: '$hash',
+          hash: 'password',
         });
       })
       .then((res) => {

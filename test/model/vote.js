@@ -34,7 +34,7 @@ describe('Vote Model', () => {
       year: year,
       name: 'User',
       email: 'user@bzv.js',
-      hash: '$hash',
+      hash: 'password',
       role: 'user'
     };
     var period = {
@@ -177,7 +177,7 @@ describe('Vote Model', () => {
           year: 2000,
           name: 'User',
           email: 'user@bzv.js',
-          hash: '$hash',
+          hash: 'password',
         });
       })
       .then((res) => {

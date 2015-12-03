@@ -31,7 +31,7 @@ describe('Vote API', () => {
       year: year,
       name: 'User',
       email: 'user@bzv.js',
-      hash: '$hash',
+      password: 'password',
       role: 'user'
     };
     var period = {

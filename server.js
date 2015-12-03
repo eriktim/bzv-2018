@@ -21,12 +21,10 @@ var verbose = process.env.NODE_ENV != 'test';
 
 var mongoPath = config.db[process.env.NODE_ENV || 'dev'];
 mongoose.connect(mongoPath, (err) => {
-  if (verbose) {
-    if (err) {
-      console.error(err);
-    } else {
-      console.log('connected to ' + mongoPath);
-    }
+  if (err) {
+    console.error(err);
+  } else if (verbose) {
+    console.log('connected to ' + mongoPath);
   }
 });
 

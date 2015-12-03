@@ -124,7 +124,7 @@ describe('Period Model', () => {
           year: year,
           name: 'User',
           email: 'user@bzv.js',
-          hash: '$hash',
+          hash: 'password',
         });
       })
       .then((res) => {
@@ -225,7 +225,7 @@ describe('Period Model', () => {
           year: 2000,
           name: 'User',
           email: 'user@bzv.js',
-          hash: '$hash',
+          hash: 'password',
         });
       })
       .then((res) => {

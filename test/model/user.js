@@ -17,7 +17,7 @@ describe('User Model', () => {
       year: 2000,
       name: 'Foo',
       email: 'foo@bar.js',
-      hash: '$hash',
+      hash: 'password',
       role: 'admin'
     };
     return User.create(user)
@@ -25,7 +25,7 @@ describe('User Model', () => {
         expect(user.year).to.equal(2000);
         expect(user.name).to.equal('Foo');
         expect(user.email).to.equal('foo@bar.js');
-        expect(user.hash).to.equal('$hash');
+        expect(user.hash).to.match(/^\$2[ayb]\$.{56}$/);
         expect(user.role).to.equal('admin');
         expect(user.updated).to.be.a('Date');
       });
@@ -36,7 +36,7 @@ describe('User Model', () => {
       year: 2000,
       name: 'Bar',
       email: 'bar@foo.js',
-      hash: '$hash'
+      hash: 'password'
       // no role
     };
     return User.create(user)
@@ -44,7 +44,7 @@ describe('User Model', () => {
         expect(user.year).to.equal(2000);
         expect(user.name).to.equal('Bar');
         expect(user.email).to.equal('bar@foo.js');
-        expect(user.hash).to.equal('$hash');
+        expect(user.hash).to.match(/^\$2[ayb]\$.{56}$/);
         expect(user.role).to.equal('user');
         expect(user.updated).to.be.a('Date');
       });
@@ -55,7 +55,7 @@ describe('User Model', () => {
       year: 2000,
       name: 'Bar',
       email: 'no-email',
-      hash: '$hash'
+      hash: 'password'
       // no role
     };
     var failed = false;
@@ -75,7 +75,7 @@ describe('User Model', () => {
       year: 2000,
       name: 'Bar',
       email: 'foo@bar.js',
-      hash: '$hash',
+      hash: 'password',
       role: 'anonymous'
     };
     var failed = false;
@@ -104,7 +104,6 @@ describe('User Model', () => {
         user.year = 1999;
         user.name = 'User';
         user.email = 'user@foo.bar';
-        user.hash = '#hash';
         user.role = 'visitor';
         return user.save();
       })
@@ -112,7 +111,7 @@ describe('User Model', () => {
         expect(user.year).to.equal(1999);
         expect(user.name).to.equal('User');
         expect(user.email).to.equal('user@foo.bar');
-        expect(user.hash).to.equal('#hash');
+        expect(user.hash).to.match(/^\$2[ayb]\$.{56}$/);
         expect(user.role).to.equal('visitor');
         expect(user.updated).to.be.a('Date');
       });
@@ -172,7 +171,7 @@ describe('User Model', () => {
           year: year,
           name: 'User',
           email: 'user@bzv.js',
-          hash: '$hash',
+          hash: 'password',
         });
       })
       .then((res) => {

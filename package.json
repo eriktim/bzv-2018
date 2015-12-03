@@ -6,7 +6,7 @@
     "url": "https://github.com/gingerik/bzv.git"
   },
   "scripts": {
-    "test": "node_modules/mocha/bin/mocha test/**/*.js",
+    "test": "mocha test/**/*.js",
     "start": "node server.js"
   },
   "main": "server.js",
@@ -17,6 +17,7 @@
     "node-fetch": "1.x.x"
   },
   "dependencies": {
+    "bcrypt": "0.x.x",
     "body-parser": "1.x.x",
     "express": "4.0.x",
     "moment": "2.x.x",
