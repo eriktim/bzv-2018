@@ -198,4 +198,92 @@ describe('Candidate Model', () => {
 
   });
 
+  describe('should have functionally correct methods', () => {
+
+    var candidates = [];
+    var periods = [];
+
+    before(() => {
+      return Promise.all([
+        Peasant.create({
+          year: 2000,
+          name: 'Peasant'
+        }),
+        Period.create({
+          year: 2000,
+          start: moment().subtract(4, 'weeks'),
+          end: moment().subtract(3, 'weeks'),
+          reference: moment().subtract(1, 'week'),
+          numberOfVotes: 1
+        }),
+        Period.create({
+          year: 2000,
+          start: moment().subtract(4, 'weeks'),
+          end: moment().subtract(3, 'weeks'),
+          reference: moment().add(1, 'week'),
+          numberOfVotes: 1
+        })
+      ])
+      .then((values) => {
+        var peasant = values.shift();
+        periods = values;
+        return Promise.all([
+          Candidate.create({
+            name: 'CandidateA',
+            peasant: peasant._id
+          }),
+          Candidate.create({
+            name: 'CandidateB',
+            peasant: peasant._id,
+            dropped: moment().subtract(2, 'week')
+          }),
+          Candidate.create({
+            name: 'CandidateC',
+            peasant: peasant._id,
+            dropped: moment()
+          })
+        ]);
+      })
+      .then((values) => {
+        candidates = values;
+        expect(periods.length).to.equal(2);
+        expect(candidates.length).to.equal(3);
+      });
+    });
+
+    it('isDropped', () => {
+      expect(candidates[0].isDropped()).to.be.false;
+      expect(candidates[0].isDropped(periods[0])).to.be.false;
+      expect(candidates[0].isDropped(periods[1])).to.be.false;
+      expect(candidates[1].isDropped()).to.be.true;
+      expect(candidates[1].isDropped(periods[0])).to.be.true;
+      expect(candidates[1].isDropped(periods[1])).to.be.true;
+      expect(candidates[2].isDropped()).to.be.true;
+      expect(candidates[2].isDropped(periods[0])).to.be.false;
+      expect(candidates[2].isDropped(periods[1])).to.be.true;
+    });
+
+    it('isWinner', () => {
+      return Promise.all([
+        candidates[0].isWinner(),
+        candidates[1].isWinner(),
+        candidates[2].isWinner()
+      ])
+      .then((values) => {
+        expect(values[0]).to.be.true;
+        expect(values[1]).to.be.false;
+        expect(values[2]).to.be.false;
+      });
+    });
+
+    after(() => {
+      return Promise.all([
+        Peasant.remove(),
+        Period.remove(),
+        Candidate.remove()
+      ]);
+    });
+
+  });
+
 });

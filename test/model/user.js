@@ -238,4 +238,37 @@ describe('User Model', () => {
 
   });
 
+  describe('should have functionally correct methods', () => {
+
+    var user;
+
+    before(() => {
+      return User.create({
+        year: 2000,
+        name: 'User',
+        email: 'user@bzv.js',
+        hash: 'correct-password'
+      })
+      .then((res) => {
+        user = res;
+      });
+    });
+
+    it('hasPassword', () => {
+      return user.hasPassword('correct-password')
+        .then((res) => {
+          expect(res).to.be.true;
+          return user.hasPassword('incorrect-password');
+        })
+        .then((res) => {
+          expect(res).to.be.false;
+        });
+    });
+
+    after(() => {
+      return User.remove();
+    });
+
+  });
+
 });

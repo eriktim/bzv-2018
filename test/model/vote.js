@@ -17,6 +17,11 @@ describe('Vote Model', () => {
   var myCandidateB;
   var myPeriod;
   var myUser;
+  var candidateA;
+  var candidateB;
+  var peasant;
+  var period;
+  var user;
 
   before(() => {
     var year = 2000;
@@ -136,12 +141,6 @@ describe('Vote Model', () => {
   });
 
   describe('should have restrictions', () => {
-
-    var candidateA;
-    var candidateB;
-    var peasant;
-    var period;
-    var user;
 
     before(() => {
       return Promise.all([
@@ -296,7 +295,11 @@ describe('Vote Model', () => {
       });
     });
 
-    it('should collect points', () => {
+  });
+
+  describe('should have functionally correct methods', () => {
+
+    it('setPoints', () => {
       return Period.create({
         year: 2000,
         start: moment().subtract(1, 'week'),

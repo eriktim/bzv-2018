@@ -184,4 +184,63 @@ describe('Peasant Model', () => {
 
   });
 
+  describe('should have functionally correct methods', () => {
+
+    var candidates = [];
+    var peasant;
+
+    before(() => {
+      return Peasant.create({
+        year: 2000,
+        name: 'Peasant'
+      })
+      .then((res) => {
+        peasant = res;
+        return Promise.all([
+          Candidate.create({
+            name: 'CandidateA',
+            peasant: peasant._id
+          }),
+          Candidate.create({
+            name: 'CandidateB',
+            peasant: peasant._id
+          }),
+          Candidate.create({
+            name: 'CandidateC',
+            peasant: peasant._id,
+            dropped: moment()
+          })
+        ]);
+      })
+      .then((values) => {
+        candidates = values;
+        expect(candidates.length).to.equal(3);
+      });
+    });
+
+    it('getLove', () => {
+      return peasant.getLove()
+        .then((candidate) => {
+          expect(candidate).to.be.undefined;
+          candidates[0].dropped = moment();
+          return candidates[0].save()
+            .then(() => {
+              return peasant.getLove();
+            });
+        })
+        .then((candidate) => {
+          expect(candidate._id.toString())
+              .to.equal(candidates[1]._id.toString());
+        });
+    });
+
+    after(() => {
+      return Promise.all([
+        Peasant.remove(),
+        Candidate.remove()
+      ]);
+    });
+
+  });
+
 });
