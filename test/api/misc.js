@@ -8,7 +8,7 @@ var url = utils.url;
 describe('API', () => {
 
   it('GET /api/dummy', () => {
-    return fetch(url + 'dummy')
+    return fetch(url + 'dummy', utils.get())
       .then((res) => {
         expect(res.ok).to.be.false;
         expect(res.status).to.equal(404);

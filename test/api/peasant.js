@@ -44,7 +44,7 @@ describe('Peasant API', () => {
   });
 
   it('GET /api/peasant', () => {
-    return fetch(url + 'peasant')
+    return fetch(url + 'peasant', utils.get())
       .then((res) => {
         expect(res.ok).to.be.true;
         return res.json();
@@ -71,7 +71,7 @@ describe('Peasant API', () => {
   it('DELETE /api/peasant/:id', () => {
     var dels = [];
     peasants.forEach((peasant) => {
-      var del = fetch(url + 'peasant/' + peasant._id, {method: 'DELETE'})
+      var del = fetch(url + 'peasant/' + peasant._id, utils.delete())
         .then((res) => {
           expect(res.ok).to.be.true;
         });
@@ -81,7 +81,7 @@ describe('Peasant API', () => {
   });
 
   it('GET /api/peasant', () => {
-    return fetch(url + 'peasant')
+    return fetch(url + 'peasant', utils.get())
       .then((res) => {
         expect(res.ok).to.be.true;
         return res.json();

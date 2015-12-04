@@ -8,14 +8,15 @@ var url = utils.url;
 
 describe('Vote API', () => {
 
+  var userId;
   var votes;
   var myPeasant;
   var myCandidateA;
   var myCandidateB;
   var myPeriod;
-  var myUser;
 
   before(() => {
+    userId = utils.userId();
     var year = 2000;
     var peasant = {
       year: year,
@@ -26,13 +27,6 @@ describe('Vote API', () => {
     };
     var candidateB = {
       name: 'CandidateB'
-    };
-    var user = {
-      year: year,
-      name: 'User',
-      email: 'user@bzv.js',
-      password: 'password',
-      role: 'user'
     };
     var period = {
       year: year,
@@ -68,14 +62,6 @@ describe('Vote API', () => {
       .then((values) => {
         myCandidateA = values.shift();
         myCandidateB = values.shift();
-        return fetch(url + 'user', utils.post(user));
-      })
-      .then((res) => {
-        expect(res.ok).to.be.true;
-        return res.json();
-      })
-      .then((user) => {
-        myUser = user;
         return fetch(url + 'period', utils.post(period));
       })
       .then((res) => {
@@ -91,7 +77,7 @@ describe('Vote API', () => {
     var data = {
       candidate: myCandidateA._id,
       period: myPeriod._id,
-      user: myUser._id,
+      user: userId,
       type: 'love',
       points: 500,
       bonusPoints: 500
@@ -100,11 +86,12 @@ describe('Vote API', () => {
       .then((res) => {
         expect(res.ok).to.be.true;
         return res.json();
-      }).then((vote) => {
+      })
+      .then((vote) => {
         expect(vote._id).to.be.ok;
         expect(vote.candidate).to.equal(myCandidateA._id);
         expect(vote.period).to.equal(myPeriod._id);
-        expect(vote.user).to.equal(myUser._id);
+        expect(vote.user).to.equal(userId);
         expect(vote.type).to.equal('love');
         expect(vote.points).to.equal(0);
         expect(vote.bonusPoints).to.equal(0);
@@ -116,7 +103,7 @@ describe('Vote API', () => {
     var data = {
       candidate: myCandidateB._id,
       period: myPeriod._id,
-      user: myUser._id,
+      user: userId,
       type: 'good'
     };
     return fetch(url + 'vote', utils.post(data))
@@ -127,7 +114,7 @@ describe('Vote API', () => {
         expect(vote._id).to.be.ok;
         expect(vote.candidate).to.equal(myCandidateB._id);
         expect(vote.period).to.equal(myPeriod._id);
-        expect(vote.user).to.equal(myUser._id);
+        expect(vote.user).to.equal(userId);
         expect(vote.type).to.equal('good');
         expect(vote.points).to.equal(0);
         expect(vote.bonusPoints).to.equal(0);
@@ -136,7 +123,7 @@ describe('Vote API', () => {
   });
 
   it('GET /api/vote', () => {
-    return fetch(url + 'vote')
+    return fetch(url + 'vote', utils.get())
       .then((res) => {
         expect(res.ok).to.be.true;
         return res.json();
@@ -163,7 +150,7 @@ describe('Vote API', () => {
   it('DELETE /api/vote/:id', () => {
     var dels = [];
     votes.forEach((vote) => {
-      var del = fetch(url + 'vote/' + vote._id, {method: 'DELETE'})
+      var del = fetch(url + 'vote/' + vote._id, utils.delete())
         .then((res) => {
           expect(res.ok).to.be.true;
         });
@@ -173,7 +160,7 @@ describe('Vote API', () => {
   });
 
   it('GET /api/peasant', () => {
-    return fetch(url + 'vote')
+    return fetch(url + 'vote', utils.get())
       .then((res) => {
         expect(res.ok).to.be.true;
         return res.json();
@@ -183,22 +170,18 @@ describe('Vote API', () => {
   });
 
   after(() => {
-    return fetch(url + 'period/' + myPeriod._id, {method: 'DELETE'})
-      .then((res) => {
-        expect(res.ok).to.be.true;
-        return fetch(url + 'user/' + myUser._id, {method: 'DELETE'});
-      })
+    return fetch(url + 'period/' + myPeriod._id, utils.delete())
       .then((res) => {
         expect(res.ok).to.be.true;
         return Promise.all([
-          fetch(url + 'candidate/' + myCandidateA._id, {method: 'DELETE'}),
-          fetch(url + 'candidate/' + myCandidateB._id, {method: 'DELETE'})
+          fetch(url + 'candidate/' + myCandidateA._id, utils.delete()),
+          fetch(url + 'candidate/' + myCandidateB._id, utils.delete())
         ]);
       })
       .then((values) => {
         expect(values[0].ok).to.be.true;
         expect(values[1].ok).to.be.true;
-        return fetch(url + 'peasant/' + myPeasant._id, {method: 'DELETE'});
+        return fetch(url + 'peasant/' + myPeasant._id, utils.delete());
       })
       .then((res) => {
         expect(res.ok).to.be.true;

@@ -55,7 +55,7 @@ describe('Period API', () => {
   });
 
   it('GET /api/period', () => {
-    return fetch(url + 'period')
+    return fetch(url + 'period', utils.get())
       .then((res) => {
         expect(res.ok).to.be.true;
         return res.json();
@@ -82,7 +82,7 @@ describe('Period API', () => {
   it('DELETE /api/period/:id', () => {
     var dels = [];
     periods.forEach((period) => {
-      var del = fetch(url + 'period/' + period._id, {method: 'DELETE'})
+      var del = fetch(url + 'period/' + period._id, utils.delete())
         .then((res) => {
           expect(res.ok).to.be.true;
         });
@@ -92,7 +92,7 @@ describe('Period API', () => {
   });
 
   it('GET /api/period', () => {
-    return fetch(url + 'period')
+    return fetch(url + 'period', utils.get())
       .then((res) => {
         expect(res.ok).to.be.true;
         return res.json();

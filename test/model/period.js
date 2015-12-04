@@ -233,7 +233,7 @@ describe('Period Model', () => {
         return Promise.all([
           Peasant.find(),
           Candidate.find(),
-          User.find()
+          User.find({role: 'user'})
         ]);
       })
       .then((values) => {

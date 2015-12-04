@@ -58,13 +58,15 @@ describe('User API', () => {
   });
 
   it('GET /api/user', () => {
-    return fetch(url + 'user')
+    return fetch(url + 'user', utils.get())
       .then((res) => {
         expect(res.ok).to.be.true;
         return res.json();
       }).then((result) => {
         users = result;
-        expect(users.length).to.equal(2);
+        expect(users.length).to.equal(3);
+        var admins = users.filter(user => user.role == 'admin');
+        expect(admins.length).to.equal(2);
       });
   });
 
@@ -94,7 +96,7 @@ describe('User API', () => {
   it('DELETE /api/user/:id', () => {
     var dels = [];
     users.forEach((user) => {
-      var del = fetch(url + 'user/' + user._id, {method: 'DELETE'})
+      var del = fetch(url + 'user/' + user._id, utils.delete())
         .then((res) => {
           expect(res.ok).to.be.true;
         });
@@ -104,7 +106,7 @@ describe('User API', () => {
   });
 
   it('GET /api/user', () => {
-    return fetch(url + 'user')
+    return fetch(url + 'user', utils.get())
       .then((res) => {
         expect(res.ok).to.be.true;
         return res.json();

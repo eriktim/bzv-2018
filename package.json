@@ -20,8 +20,11 @@
     "bcrypt": "0.x.x",
     "body-parser": "1.x.x",
     "express": "4.0.x",
+    "jsonwebtoken": "5.x.x",
     "moment": "2.x.x",
     "mongoose": "4.2.x",
+    "morgan": "1.x.x",
+    "randomstring": "1.1.x",
     "traceur": "0.x.x"
   },
   "engines": {

@@ -61,7 +61,7 @@ describe('Candidate API', () => {
   });
 
   it('GET /api/candidate', () => {
-    return fetch(url + 'candidate')
+    return fetch(url + 'candidate', utils.get())
       .then((res) => {
         expect(res.ok).to.be.true;
         return res.json();
@@ -88,7 +88,7 @@ describe('Candidate API', () => {
   it('DELETE /api/candidate/:id', () => {
     var dels = [];
     candidates.forEach((candidate) => {
-      var del = fetch(url + 'candidate/' + candidate._id, {method: 'DELETE'})
+      var del = fetch(url + 'candidate/' + candidate._id, utils.delete())
         .then((res) => {
           expect(res.ok).to.be.true;
         });
@@ -98,7 +98,7 @@ describe('Candidate API', () => {
   });
 
   it('GET /api/peasant', () => {
-    return fetch(url + 'candidate')
+    return fetch(url + 'candidate', utils.get())
       .then((res) => {
         expect(res.ok).to.be.true;
         return res.json();
@@ -108,7 +108,7 @@ describe('Candidate API', () => {
   });
 
   after(() => {
-    return fetch(url + 'peasant/' + myPeasant._id, {method: 'DELETE'})
+    return fetch(url + 'peasant/' + myPeasant._id, utils.delete())
       .then((res) => {
         expect(res.ok).to.be.true;
       });

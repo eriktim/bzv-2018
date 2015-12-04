@@ -138,7 +138,7 @@ describe('Peasant Model', () => {
           Peasant.find(),
           Candidate.find(),
           Period.find(),
-          User.find(),
+          User.find({role: 'user'}),
           Vote.find()
         ]);
       })

@@ -2,26 +2,40 @@
 
 process.env.NODE_ENV = 'test';
 
+var fetch = require('node-fetch');
+var formurlencoded = require('form-urlencoded');
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
-var formurlencoded = require('form-urlencoded');
 
+var User = require('../lib/model/user');
 var config = require('../config');
 var server = require('../server');
 
-exports.url = server.url;
+var userId;
+var token;
 
-var urlEncodedRequest = function(method) {
+var createRequestHandler = function(method) {
+  var obj = {method: method};
   return function(data) {
-    return {
-      method: method,
-      body: formurlencoded.encode(data),
-      headers: {'content-type': 'application/x-www-form-urlencoded'}
-    };
+    var headers = {};
+    if (token) {
+      headers['x-access-token'] = token;
+    }
+    if (['POST', 'PUT'].indexOf(method) >= 0) {
+      headers['content-type'] = 'application/x-www-form-urlencoded';
+      obj.body = formurlencoded.encode(data);
+    }
+    obj.headers = headers;
+    return obj;
   };
 };
-exports.post = urlEncodedRequest('POST');
-exports.put = urlEncodedRequest('PUT');
+
+exports.get = createRequestHandler('GET');
+exports.post = createRequestHandler('POST');
+exports.put = createRequestHandler('PUT');
+exports.delete = createRequestHandler('DELETE');
+exports.url = server.url;
+exports.userId = function() {return userId;};
 
 before(() => {
 
@@ -30,7 +44,29 @@ before(() => {
       for (var i in mongoose.connection.collections) {
         mongoose.connection.collections[i].remove(() => {});
       }
-      resolve();
+      User.create({
+        year: 2000,
+        name: 'admin',
+        email: 'admin@bzv.js',
+        hash: 'password',
+        role: 'admin'
+      })
+      .then((user) => {
+        userId = user._id.toString();
+        return fetch(server.url + 'authenticate',
+            exports.post({name: 'admin', password: 'password'}));
+      })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error('failed obtaining token');
+        }
+        return res.json();
+      })
+      .then((data) => {
+        token = data.token;
+        resolve();
+      })
+      .catch(console.error);
     };
 
     if (mongoose.connection.readyState === 0) {
