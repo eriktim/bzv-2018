@@ -1,7 +1,7 @@
 module.exports = {
   port: {
     prod: 3001,
-    dev: 8080,
+    dev: 7070,
     test: 8181
   },
   db: {

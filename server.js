@@ -1,6 +1,7 @@
 'use strict';
 
 var bodyParser = require('body-parser');
+var compress = require('compression');
 var express = require('express');
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
@@ -21,6 +22,7 @@ var app = express();
 app.disable('x-powered-by');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(compress());
 if (verbose) {
   app.use(morgan('dev'));
 }
@@ -52,6 +54,7 @@ router.use((req, res, next) => {
 setup.bind(app);
 
 app.use('/api', router);
+app.use(express.static('static', {index: false, maxAge: 600000}));
 
 app.use((req, res, next) => {
   res.sendfile('index.html', {root: './static'});
