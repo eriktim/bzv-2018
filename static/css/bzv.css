@@ -2,3 +2,22 @@
   margin-top: 30vh;
   margin-bottom: 70vh;
 }
+
+.vote {
+  font-size: larger;
+}
+
+.vote-love::before {
+  content: "\2764\00a0";
+  color: red;
+}
+
+.vote-good::before {
+  content: "\2714\00a0";
+  color: green;
+}
+
+.vote-bad::before {
+  content: "\2718\00a0";
+  color: lightgray;
+}

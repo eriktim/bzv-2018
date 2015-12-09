@@ -24,7 +24,8 @@ function renderPeasant(peasant) {
         row.push('<td>-</td>');
         return;
       }
-      row.push(`<td>${vote.type} (${vote.points})</td>`);
+      row.push(`<td><span class="vote vote-${vote.type}">
+          </span>(${vote.points})</td>`);
     });
     rows.push('<tr>' + row.join('') + '</tr>');
   });
