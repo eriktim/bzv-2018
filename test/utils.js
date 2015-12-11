@@ -9,7 +9,7 @@ mongoose.Promise = global.Promise;
 
 var User = require('../lib/model/user');
 var config = require('../config');
-var server = require('../server');
+var server = require('../lib/api/server');
 
 var userId;
 var token;
