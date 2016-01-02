@@ -38,11 +38,21 @@ var app = {
   onceLoggedIn: function() {
     return logInPromise;
   },
-  render: function() {
+  render: function(selector) {
+    var element = document.querySelector(selector);
     var buttonLogOut = document.getElementById('button-logout');
     buttonLogOut.addEventListener('click', logOut);
     var buttonLogIn = document.getElementById('button-login');
     buttonLogIn.addEventListener('click', logIn);
+    var onKeyDown = function(e) {
+      if (e.keyCode === 13) {
+        logIn();
+      }
+    };
+    var inputs = element.querySelectorAll('input');
+    Array.from(inputs).forEach((el) => {
+      el.onkeydown = onKeyDown;
+    });
     logIn();
   }
 };

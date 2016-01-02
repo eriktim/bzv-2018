@@ -3,6 +3,14 @@
   margin-bottom: 70vh;
 }
 
+td, th {
+  text-align: center;
+}
+
+.no-vote {
+  background-color: lightyellow;
+}
+
 .vote {
   font-size: larger;
 }
@@ -20,4 +28,27 @@
 .vote-bad::before {
   content: "\2718\00a0";
   color: lightgray;
+}
+
+.vote-reference td:first-of-type::after {
+}
+
+.vote-reference-1 td:first-of-type::after {
+  content: "\00a0\278a";
+}
+
+.vote-reference-2 td:first-of-type::after {
+  content: "\00a0\278b";
+}
+
+.vote-reference-3 td:first-of-type::after {
+  content: "\00a0\278c";
+}
+
+.vote-reference-4 td:first-of-type::after {
+  content: "\00a0\278d";
+}
+
+.vote-reference-5 td:first-of-type::after {
+  content: "\00a0\278e";
 }
