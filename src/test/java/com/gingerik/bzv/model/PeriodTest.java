@@ -1,0 +1,115 @@
+package com.gingerik.bzv.model;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+
+public class PeriodTest {
+
+  private static Validator validator;
+  private final static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+  public static Date t0;
+  public static Date t1;
+  public static Date t2;
+
+  @BeforeClass
+  public static void setUp() throws ParseException {
+    ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    validator = factory.getValidator();
+    t0 = dateFormat.parse("2000-01-01");
+    t1 = dateFormat.parse("2000-02-01");
+    t2 = dateFormat.parse("2000-03-01");
+  }
+
+  @Test
+  public void yearTooLow() {
+    Period period = new Period(1900, t0, t1, t2, 1);
+
+    Set<ConstraintViolation<Period>> constraintViolations =
+        validator.validate(period);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "must be greater than or equal to 2000",
+        constraintViolations.iterator().next().getMessage()
+    );
+  }
+
+  @Test
+  public void endBeforeStart() {
+    Period period = new Period(2000, t1, t0, t2, 1);
+
+    Set<ConstraintViolation<Period>> constraintViolations =
+        validator.validate(period);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "period dates should be valid",
+        constraintViolations.iterator().next().getMessage()
+    );
+  }
+
+  @Test
+  public void referenceWithinPeriod() {
+    Period period = new Period(2000, t0, t2, t1, 1);
+
+    Set<ConstraintViolation<Period>> constraintViolations =
+        validator.validate(period);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "period dates should be valid",
+        constraintViolations.iterator().next().getMessage()
+    );
+  }
+
+  @Test
+  public void numberOfVotesTooLow() {
+    Period period = new Period(2000, t0, t1, t2, 0);
+
+    Set<ConstraintViolation<Period>> constraintViolations =
+        validator.validate(period);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "must be greater than or equal to 1",
+        constraintViolations.iterator().next().getMessage()
+    );
+  }
+
+  @Test
+  public void numberOfVotesTooHigh() {
+    Period period = new Period(2000, t0, t1, t2, 10);
+
+    Set<ConstraintViolation<Period>> constraintViolations =
+        validator.validate(period);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "must be less than or equal to 5",
+        constraintViolations.iterator().next().getMessage()
+    );
+  }
+
+  @Test
+  public void periodIsValid() {
+    Period period = new Period(2000, t0, t1, t2, 1);
+
+    Set<ConstraintViolation<Period>> constraintViolations =
+        validator.validate(period);
+
+    assertEquals(0, constraintViolations.size());
+  }
+}
