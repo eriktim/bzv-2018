@@ -1,6 +1,5 @@
 package com.gingerik.bzv.model;
 
-import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.Entity;
@@ -9,7 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Min;
 
-@Data
 @Entity
 public class Peasant {
 
@@ -29,6 +27,14 @@ public class Peasant {
   public Peasant(int year, String name) {
     this.year = year;
     this.name = name;
+  }
+
+  public int getYear() {
+    return year;
+  }
+
+  public String getName() {
+    return name;
   }
 
 }

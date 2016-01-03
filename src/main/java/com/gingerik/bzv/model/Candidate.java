@@ -1,14 +1,12 @@
 package com.gingerik.bzv.model;
 
-import lombok.Data;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
-@Data
 @Entity
 public class Candidate {
 
@@ -24,7 +22,7 @@ public class Candidate {
   @NotBlank
   private String name;
 
-  private Date dropped;
+  private LocalDateTime dropped;
 
   private Candidate() {
   }
@@ -34,9 +32,25 @@ public class Candidate {
     this.name = name;
   }
 
-  public Candidate(Peasant peasant, String name, Date dropped) {
+  public Candidate(Peasant peasant, String name, LocalDateTime dropped) {
     this.peasant = peasant;
     this.name = name;
     this.dropped = dropped;
+  }
+
+  public void setDropped(LocalDateTime dropped) {
+    this.dropped = dropped;
+  }
+
+  public Peasant getPeasant() {
+    return peasant;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public LocalDateTime getDropped() {
+    return dropped;
   }
 }

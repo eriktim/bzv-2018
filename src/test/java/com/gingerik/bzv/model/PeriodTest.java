@@ -10,7 +10,7 @@ import javax.validation.ValidatorFactory;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Set;
 
@@ -19,18 +19,14 @@ import static org.junit.Assert.assertEquals;
 public class PeriodTest {
 
   private static Validator validator;
-  private final static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-  public static Date t0;
-  public static Date t1;
-  public static Date t2;
+  private final static LocalDateTime t0 = LocalDateTime.now().minusDays(1);
+  private final static LocalDateTime t1 = LocalDateTime.now().plusDays(1);
+  private final static LocalDateTime t2 = LocalDateTime.now().plusDays(2);
 
   @BeforeClass
   public static void setUp() throws ParseException {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     validator = factory.getValidator();
-    t0 = dateFormat.parse("2000-01-01");
-    t1 = dateFormat.parse("2000-02-01");
-    t2 = dateFormat.parse("2000-03-01");
   }
 
   @Test

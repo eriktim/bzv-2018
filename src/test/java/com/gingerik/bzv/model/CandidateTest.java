@@ -7,6 +7,7 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
@@ -64,7 +65,8 @@ public class CandidateTest {
 
   @Test
   public void droppedCandidateIsValid() {
-    Candidate candidate = new Candidate(peasant, "Candidate", new Date());
+    Candidate candidate = new Candidate(
+        peasant, "Candidate", LocalDateTime.now());
 
     Set<ConstraintViolation<Candidate>> constraintViolations =
         validator.validate(candidate);

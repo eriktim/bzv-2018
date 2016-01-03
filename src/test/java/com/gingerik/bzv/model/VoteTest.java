@@ -7,7 +7,8 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.util.Date;
+import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
@@ -19,16 +20,29 @@ public class VoteTest {
   private static Candidate candidate;
   private static Candidate droppedCandidate;
   private static Period period;
+  private static Period endedPeriod;
   private static User user;
 
   @BeforeClass
-  public static void setUp() {
+  public static void setUp() throws ParseException {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    LocalDateTime now = LocalDateTime.now();
     validator = factory.getValidator();
     peasant = new Peasant(2000, "Peasant");
     candidate = new Candidate(peasant, "Candidate");
-    droppedCandidate = new Candidate(peasant, "DroppedCandidate");
-    period = new Period(2000, PeriodTest.t0, PeriodTest.t1, PeriodTest.t2, 1);
+    droppedCandidate = new Candidate(peasant, "DroppedCandidate", now.minusDays(5));
+    period = new Period(
+        2000,
+        now.minusDays(1),
+        now.plusDays(1),
+        now.plusDays(2),
+        1);
+    endedPeriod = new Period(
+        2000,
+        now.minusDays(3),
+        now.minusDays(2),
+        now.minusDays(1),
+        1);
     user = new User(2000, "User", UserTest.EMAIL, UserTest.HASH);
   }
 
@@ -95,11 +109,25 @@ public class VoteTest {
     Set<ConstraintViolation<Vote>> constraintViolations =
         validator.validate(vote);
 
-    assertEquals(0, constraintViolations.size());
-    /* TODO assertEquals(
-        "may not be null",
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "vote candidate should not be dropped",
         constraintViolations.iterator().next().getMessage()
-    );*/
+    );
+  }
+
+  @Test
+  public void voteOnEndedPeriod() {
+    Vote vote = new Vote(user, candidate, endedPeriod, Vote.Type.BAD);
+
+    Set<ConstraintViolation<Vote>> constraintViolations =
+        validator.validate(vote);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "vote should be within the period",
+        constraintViolations.iterator().next().getMessage()
+    );
   }
 
   @Test

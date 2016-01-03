@@ -1,7 +1,6 @@
 package com.gingerik.bzv.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Data;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -12,7 +11,6 @@ import javax.persistence.Id;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
-@Data
 @Entity
 public class User {
 
@@ -44,6 +42,22 @@ public class User {
     this.year = year;
     this.name = name;
     this.email = email;
+    setHash(hash);
+  }
+
+  public void setHash(String hash) {
     this.hash = hash;
+  }
+
+  public int getYear() {
+    return year;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getEmail() {
+    return email;
   }
 }

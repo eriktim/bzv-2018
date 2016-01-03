@@ -1,8 +1,5 @@
 package com.gingerik.bzv.model;
 
-import lombok.Data;
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,9 +8,8 @@ import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import java.time.LocalDateTime;
 
-@Data
 @Entity
 public class Period {
 
@@ -25,12 +21,12 @@ public class Period {
   private int year;
 
   @NotNull
-  private Date start;
+  private LocalDateTime start;
 
   @NotNull
-  private Date end;
+  private LocalDateTime end;
 
-  private Date reference;
+  private LocalDateTime reference;
 
   @Min(1)
   @Max(5)
@@ -39,7 +35,7 @@ public class Period {
   private Period() {
   }
 
-  public Period(int year, Date start, Date end, Date reference, int numberOfVotes) {
+  public Period(int year, LocalDateTime start, LocalDateTime end, LocalDateTime reference, int numberOfVotes) {
     this.year = year;
     this.start = start;
     this.end = end;
@@ -47,10 +43,33 @@ public class Period {
     this.numberOfVotes = numberOfVotes;
   }
 
-  @AssertTrue(message="period dates should be valid")
+  @AssertTrue(message = "period dates should be valid")
   private boolean isValid() {
-    return this.end.after(this.start) &&
-        (this.reference == null || this.reference.after(this.end));
+    return end.isAfter(start) &&
+        (reference == null || reference.isAfter(end));
   }
 
+  public void setReference(LocalDateTime reference) {
+    this.reference = reference;
+  }
+
+  public int getYear() {
+    return year;
+  }
+
+  public LocalDateTime getStart() {
+    return start;
+  }
+
+  public LocalDateTime getEnd() {
+    return end;
+  }
+
+  public LocalDateTime getReference() {
+    return reference;
+  }
+
+  public int getNumberOfVotes() {
+    return numberOfVotes;
+  }
 }
