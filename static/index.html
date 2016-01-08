@@ -1,60 +1,16 @@
 <!DOCTYPE html>
-<html lang="nl">
-<head>
-  <meta charset="utf-8">
-  <title>bzv</title>
-  <meta name="description" content="bzv">
-  <meta name="author" content="gingerik">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/skeleton.css">
-  <link rel="stylesheet" href="css/bzv.css">
-  <link rel="icon" href="images/favicon.ico">
-  <script src="lib/moment.js"></script>
-  <script src="lib/system.js"></script>
-</head>
-<body>
-  <div class="container">
-    <div class="row">
-      <div class="one-half column">
-        <img class="u-max-full-width" src="images/bzv.jpg">
-      </div>
-      <div class="one-half column">
-        <h3>Boer Zoekt Vrouw</h3>
-        <p>
-          Welkom bij de strijd om de Boer Zoekt Vrouw Bokaal!
-        </p>
-        <div id="auth-login">
-          <p>Om te kunnen stemmen dien je eerst in te loggen.</p>
-          <label for="login-email">E-mailadres</label>
-          <input class="u-full-width" type="email" placeholder="yvon@bzv.nl" id="login-email">
-          <label for="login-password">Wachtwoord</label>
-          <input class="u-full-width" type="password" placeholder="wachtwoord" id="login-password">
-          <button class="button-primary" id="button-login">Log in</button>
-        </div>
-        <div id="auth-logout">
-          <button class="button" id="button-logout">Log uit</button>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <h4>Stemmen</h4>
-      <div id="votes"></div>
-    </div>
-    <div class="row">
-      <h4>Stand</h4>
-      <div id="rank"></div>
-    </div>
-  </div>
-  <script>
-    System.config({
-      baseURL: 'js',
-      map: {
-        traceur: '../lib/traceur.js'
-      }
-    });
-    System.import('app.js');
-  </script>
-</body>
+<html>
+  <head>
+    <title>bzv</title>
+    <link rel="stylesheet" href="css/bzv.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+  <body aurelia-app="bzv">
+    <script src="jspm_packages/system.js"></script>
+    <script src="config.js"></script>
+    <script>
+      System.import('aurelia-bootstrapper');
+    </script>
+  </body>
 </html>
