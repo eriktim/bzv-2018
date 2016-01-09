@@ -47,12 +47,10 @@ public class Vote {
   @NotNull
   private LocalDateTime update;
 
-  @Transient
   @Min(0)
   @Max(5)
   private int points;
 
-  @Transient
   @Min(0)
   @Max(5)
   private int bonusPoints;
@@ -75,9 +73,9 @@ public class Vote {
     this.candidate = candidate;
     this.period = period;
     this.type = type;
-    this.update = LocalDateTime.now();
     this.points = 0;
     this.bonusPoints = 0;
+    this.update = LocalDateTime.now();
   }
 
   @AssertTrue(message = "vote should be within the period")
@@ -86,9 +84,20 @@ public class Vote {
         update.isAfter(period.getStart()) && update.isBefore(period.getEnd());
   }
 
-  @AssertTrue(message = "vote candidate should not be dropped")
+  @AssertTrue(message = "candidate should not be dropped")
   private boolean isValidCandidate() {
     return candidate == null || candidate.getDropped() == null;
+  }
+
+  @AssertTrue(message = "points must not exceed number of candidates")
+  private boolean isValidPoints() {
+    return period == null || this.points <= period.getNumberOfVotes() * 2 + 1;
+  }
+
+  @AssertTrue(message = "bonusPoints must not exceed number of candidates")
+  private boolean isValidBonusPoints() {
+    return period == null || this.bonusPoints == 0 ||
+        this.bonusPoints == period.getNumberOfVotes();
   }
 
   public void setType(Type type) {

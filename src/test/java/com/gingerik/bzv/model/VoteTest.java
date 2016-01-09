@@ -111,7 +111,7 @@ public class VoteTest {
 
     assertEquals(1, constraintViolations.size());
     assertEquals(
-        "vote candidate should not be dropped",
+        "candidate should not be dropped",
         constraintViolations.iterator().next().getMessage()
     );
   }
