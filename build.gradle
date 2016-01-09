@@ -48,3 +48,7 @@ checkstyle {
   toolVersion = "${versions.checkstyle}"
   config = resources.text.fromArchiveEntry(configurations.checkstyleConfig, 'google_checks.xml')
 }
+
+task wrapper(type: Wrapper) {
+  gradleVersion = '2.9'
+}
