@@ -3,9 +3,13 @@ package com.gingerik.bzv.model;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class Candidate {
@@ -32,6 +36,12 @@ public class Candidate {
     this.name = name;
   }
 
+  /**
+   * Create a new Candidate.
+   * @param peasant Peasant
+   * @param name Name
+   * @param dropped Date to indicate when the Peasant dropped this candidate (optional)
+   */
   public Candidate(Peasant peasant, String name, LocalDateTime dropped) {
     this.peasant = peasant;
     this.name = name;

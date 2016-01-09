@@ -3,13 +3,18 @@ package com.gingerik.bzv.model;
 import org.apache.log4j.Logger;
 import org.springframework.data.rest.core.annotation.RestResource;
 
-import javax.persistence.*;
+import java.time.LocalDateTime;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 public class Vote {
@@ -68,6 +73,13 @@ public class Vote {
   private Vote() {
   }
 
+  /**
+   * Create a new Vote.
+   * @param user User that votes
+   * @param candidate Candidate that is being voted for
+   * @param period Period of vote
+   * @param type Type of vote
+   */
   public Vote(User user, Candidate candidate, Period period, Type type) {
     this.user = user;
     this.candidate = candidate;
@@ -80,8 +92,8 @@ public class Vote {
 
   @AssertTrue(message = "vote should be within the period")
   private boolean isWithinPeriod() {
-    return update == null || period == null ||
-        update.isAfter(period.getStart()) && update.isBefore(period.getEnd());
+    return update == null || period == null
+        || update.isAfter(period.getStart()) && update.isBefore(period.getEnd());
   }
 
   @AssertTrue(message = "candidate should not be dropped")
@@ -96,8 +108,7 @@ public class Vote {
 
   @AssertTrue(message = "bonusPoints must not exceed number of candidates")
   private boolean isValidBonusPoints() {
-    return period == null || this.bonusPoints == 0 ||
-        this.bonusPoints == period.getNumberOfVotes();
+    return period == null || this.bonusPoints == 0 || this.bonusPoints == period.getNumberOfVotes();
   }
 
   public void setType(Type type) {

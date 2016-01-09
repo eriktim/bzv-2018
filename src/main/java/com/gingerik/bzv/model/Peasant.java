@@ -24,6 +24,11 @@ public class Peasant {
   private Peasant() {
   }
 
+  /**
+   * Create a new Peasant.
+   * @param year Year of season
+   * @param name Name
+   */
   public Peasant(int year, String name) {
     this.year = year;
     this.name = name;

@@ -38,6 +38,13 @@ public class User {
   private User() {
   }
 
+  /**
+   * Create a new User.
+   * @param year Year of season
+   * @param name Name
+   * @param email Email address
+   * @param hash Password hash
+   */
   public User(int year, String name, String email, String hash) {
     this.year = year;
     this.name = name;

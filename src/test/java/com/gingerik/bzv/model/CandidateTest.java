@@ -3,13 +3,12 @@ package com.gingerik.bzv.model;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.time.LocalDateTime;
+import java.util.Set;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 

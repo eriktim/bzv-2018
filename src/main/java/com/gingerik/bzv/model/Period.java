@@ -1,5 +1,6 @@
 package com.gingerik.bzv.model;
 
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -8,7 +9,6 @@ import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @Entity
 public class Period {
@@ -35,7 +35,16 @@ public class Period {
   private Period() {
   }
 
-  public Period(int year, LocalDateTime start, LocalDateTime end, LocalDateTime reference, int numberOfVotes) {
+  /**
+   * Create a new Period.
+   * @param year Year of season
+   * @param start Start date
+   * @param end End date
+   * @param reference Reference date, to check on dropped candidates
+   * @param numberOfVotes The number of votes users have this period
+   */
+  public Period(int year, LocalDateTime start, LocalDateTime end,
+                LocalDateTime reference, int numberOfVotes) {
     this.year = year;
     this.start = start;
     this.end = end;
@@ -45,8 +54,8 @@ public class Period {
 
   @AssertTrue(message = "period dates should be valid")
   private boolean isValid() {
-    return end.isAfter(start) &&
-        (reference == null || reference.isAfter(end));
+    return end.isAfter(start)
+        && (reference == null || reference.isAfter(end));
   }
 
   public void setReference(LocalDateTime reference) {
