@@ -17,12 +17,13 @@ export class App {
     config.title = 'bzv';
     config.addPipelineStep('authorize', AuthorizeStep);
     config.map([
-      { route: ['','home'], name: 'home', moduleId: './routes/home', nav: false, title: 'Home' },
+      { route: ['','home'], name: 'home', moduleId: './routes/home', nav: false, title: 'Home', auth: true },
       { route: 'votes', name: 'votes', moduleId: './routes/votes', nav: true, title: 'Stemmen', auth: true },
       { route: 'rank', name: 'rank', moduleId: './routes/rank', nav: true, title: 'Stand', auth: true },
-      { route: 'login', name: 'login', moduleId: './auth/login', nav: false, title:'Login', authRoute: true },
-      { route: 'logout', name: 'logout', moduleId: './auth/logout', nav: false, title:'Logout', authRoute: true },
-      { route: 'signup', name: 'signup', moduleId: './auth/signup', nav: false, title:'Sign Up', authRoute: true }
+      { route: 'account', name: 'account', moduleId: './auth/account', nav: false, title:'Account' },
+      { route: 'signup', name: 'signup', moduleId: './auth/signup', nav: false, title:'Registreer' },
+      { route: 'login', name: 'login', moduleId: './auth/login', nav: false, title:'Log in' },
+      { route: 'logout', name: 'logout', moduleId: './auth/logout', nav: false, title:'Log uit' }
     ]);
 
     this.router = router;

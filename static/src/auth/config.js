@@ -1,5 +1,5 @@
 var devConfig = {
-  baseUrl: 'http://localhost:3001/api',
+  baseUrl: 'http://localhost:7070/api',
   signupUrl: 'users',
   loginUrl: 'authenticate',
   tokenName: 'id_token',
