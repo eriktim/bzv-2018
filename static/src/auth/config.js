@@ -2,15 +2,15 @@ var devConfig = {
   baseUrl: 'http://localhost:7070/api',
   signupUrl: 'users',
   loginUrl: 'authenticate',
-  tokenName: 'id_token',
+  tokenName: 'token',
   loginRedirect: '#/'
 };
 
 var config;
 if (window.location.hostname === 'localhost') {
-    config = devConfig;
+  config = devConfig;
 } else {
-    config = devConfig;
+  config = devConfig;
 }
 
 export default config;
