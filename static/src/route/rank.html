@@ -1,0 +1,23 @@
+<template>
+  <div if.bind="!users.length">(geen stand)</div>
+  <div if.bind="users.length">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Naam</th>
+        <th>Punten</th>
+        <th>Bonus</th>
+        <th>Totaal</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr repeat.for="user of users">
+        <td>${user.name}</td>
+        <td>${user.points}</td>
+        <td>${user.bonusPoints}</td>
+        <td>${user.totalPoints}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</template>

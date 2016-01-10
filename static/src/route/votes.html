@@ -1,0 +1,28 @@
+<template>
+  <div if.bind="!votes.length">(geen stemmen)</div>
+  <div if.bind="votes.length">
+    <ul class="nav nav-pills" repeat.for="peasant of peasants">
+      <li role="presentation" class="active">
+        <a href="#">${peasant.name}</a>
+      </li>
+    </ul>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <td>&nbsp;</td>
+        <th repeat.for="candidate of candidates">
+          ${candidate.name}
+        </th>
+        <th><em>totaal</em></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr repeat.for="vote of votes">
+        <td>${vote.end}</td>
+        <td repeat.for="candidate of candidates">
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</template>
