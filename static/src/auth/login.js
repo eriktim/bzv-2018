@@ -15,7 +15,7 @@ export class Login {
   login() {
     return this.authService.login(this.email, this.password)
       .then(response => {
-        console.log('Login response: ' + response);
+        console.log('login successful');
       })
       .catch(error => {
         this.loginError = error.reason || error.message || error.response || error;

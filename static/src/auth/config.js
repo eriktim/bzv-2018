@@ -3,6 +3,8 @@ var devConfig = {
   signupUrl: 'users',
   loginUrl: 'authenticate',
   tokenName: 'token',
+  authHeader: 'x-access-token',
+  authToken: '',
   loginRedirect: '#/'
 };
 

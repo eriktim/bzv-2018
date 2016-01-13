@@ -3,10 +3,14 @@ import {DataService} from '../dataservice'
 
 @inject(DataService)
 export class Rank {
-  users = []
+  users = [];
 
   constructor(dataService) {
-    dataService.fetchUsers()
+    this.dataService = dataService;
+  }
+
+  activate() {
+    this.dataService.fetchUsers()
       .then(users => {this.users = users});
   }
 }
