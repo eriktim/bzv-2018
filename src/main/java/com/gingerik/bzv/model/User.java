@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,6 +37,8 @@ public class User {
   // TODO setter, i.e. password -> hash
   private String hash;
 
+  private Set<Vote> votes = new HashSet<Vote>();
+
   private User() {
   }
 
@@ -52,19 +56,60 @@ public class User {
     setHash(hash);
   }
 
-  public void setHash(String hash) {
-    this.hash = hash;
+  public void setYear(int year) {
+    this.year = year;
   }
 
   public int getYear() {
     return year;
   }
 
+  public void setName(String name) {
+    this.name = name;
+  }
+
   public String getName() {
     return name;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
   }
 
   public String getEmail() {
     return email;
   }
+
+  public void setHash(String hash) {
+    this.hash = hash;
+  }
+
+  private String getHash() {
+    return hash;
+  }
+
+  private void setVotes(Set<Vote> votes) {
+    this.votes = votes;
+  }
+
+  // TODO unmodifiable set (pp 44)
+  public Set<Vote> getVotes() {
+    return votes;
+  }
+
+  /**
+   * Create a bidirectional link with Vote.
+   * @param vote Vote
+   */
+  public void addVote(Vote vote) {
+    if (vote == null) {
+      throw new NullPointerException("vote cannot be null");
+    }
+    if (vote.getUser() != null) {
+      throw new IllegalStateException("vote is already assigned to a user");
+    }
+    getVotes().add(vote);
+    vote.setUser(this);
+  }
+
 }

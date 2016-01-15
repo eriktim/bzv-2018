@@ -25,22 +25,8 @@ public class CandidateTest {
   }
 
   @Test
-  public void peasantNotNull() {
-    Candidate candidate = new Candidate(null, "Candidate");
-
-    Set<ConstraintViolation<Candidate>> constraintViolations =
-        validator.validate(candidate);
-
-    assertEquals(1, constraintViolations.size());
-    assertEquals(
-        "may not be null",
-        constraintViolations.iterator().next().getMessage()
-    );
-  }
-
-  @Test
   public void nameNotBlank() {
-    Candidate candidate = new Candidate(peasant, "");
+    Candidate candidate = new Candidate("", peasant);
 
     Set<ConstraintViolation<Candidate>> constraintViolations =
         validator.validate(candidate);
@@ -54,18 +40,19 @@ public class CandidateTest {
 
   @Test
   public void candidateIsValid() {
-    Candidate candidate = new Candidate(peasant, "Candidate");
+    Candidate candidate = new Candidate("Candidate", peasant);
 
     Set<ConstraintViolation<Candidate>> constraintViolations =
         validator.validate(candidate);
 
     assertEquals(0, constraintViolations.size());
+    assertEquals(true, peasant.getCandidates().contains(candidate));
   }
 
   @Test
   public void droppedCandidateIsValid() {
     Candidate candidate = new Candidate(
-        peasant, "Candidate", LocalDateTime.now());
+        "Candidate", peasant, LocalDateTime.now());
 
     Set<ConstraintViolation<Candidate>> constraintViolations =
         validator.validate(candidate);

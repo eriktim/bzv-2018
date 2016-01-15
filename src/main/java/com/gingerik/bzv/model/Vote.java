@@ -81,9 +81,9 @@ public class Vote {
    * @param type Type of vote
    */
   public Vote(User user, Candidate candidate, Period period, Type type) {
-    this.user = user;
-    this.candidate = candidate;
-    this.period = period;
+    user.addVote(this);
+    candidate.addVote(this);
+    period.addVote(this);
     this.type = type;
     this.points = 0;
     this.bonusPoints = 0;
@@ -111,28 +111,48 @@ public class Vote {
     return period == null || this.bonusPoints == 0 || this.bonusPoints == period.getNumberOfVotes();
   }
 
-  public void setType(Type type) {
-    this.type = type;
+  public void setUser(User user) {
+    this.user = user;
   }
 
   public User getUser() {
     return user;
   }
 
+  public void setCandidate(Candidate candidate) {
+    this.candidate = candidate;
+  }
+
   public Candidate getCandidate() {
     return candidate;
+  }
+
+  public void setPeriod(Period period) {
+    this.period = period;
   }
 
   public Period getPeriod() {
     return period;
   }
 
+  public void setType(Type type) {
+    this.type = type;
+  }
+
   public Type getType() {
     return type;
   }
 
+  public void setPoints(int points) {
+    this.points = points;
+  }
+
   public int getPoints() {
     return points;
+  }
+
+  public void setBonusPoints(int bonusPoints) {
+    this.bonusPoints = bonusPoints;
   }
 
   public int getBonusPoints() {
