@@ -38,7 +38,7 @@ public class UserTest {
   }
 
   @Test
-  public void nameNotBlank() {
+  public void nameMinSize() {
     User user = new User(2000, "", EMAIL, HASH);
 
     Set<ConstraintViolation<User>> constraintViolations =
@@ -46,7 +46,7 @@ public class UserTest {
 
     assertEquals(1, constraintViolations.size());
     assertEquals(
-        "may not be empty",
+        "size must be between 2 and 255",
         constraintViolations.iterator().next().getMessage()
     );
   }

@@ -36,7 +36,7 @@ public class PeasantTest {
   }
 
   @Test
-  public void nameNotBlank() {
+  public void nameMinSize() {
     Peasant peasant = new Peasant(2000, "");
 
     Set<ConstraintViolation<Peasant>> constraintViolations =
@@ -44,7 +44,7 @@ public class PeasantTest {
 
     assertEquals(1, constraintViolations.size());
     assertEquals(
-        "may not be empty",
+        "size must be between 2 and 255",
         constraintViolations.iterator().next().getMessage()
     );
   }

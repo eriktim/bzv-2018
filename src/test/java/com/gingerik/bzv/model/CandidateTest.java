@@ -25,7 +25,7 @@ public class CandidateTest {
   }
 
   @Test
-  public void nameNotBlank() {
+  public void nameMinSize() {
     Candidate candidate = new Candidate("", peasant);
 
     Set<ConstraintViolation<Candidate>> constraintViolations =
@@ -33,7 +33,7 @@ public class CandidateTest {
 
     assertEquals(1, constraintViolations.size());
     assertEquals(
-        "may not be empty",
+        "size must be between 2 and 255",
         constraintViolations.iterator().next().getMessage()
     );
   }

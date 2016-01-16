@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Candidate {
@@ -20,13 +21,11 @@ public class Candidate {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
+  private String name;
+
   @ManyToOne
   @RestResource(exported = false)
-  @NotNull
   private Peasant peasant;
-
-  @NotBlank
-  private String name;
 
   private LocalDateTime dropped;
 
@@ -53,37 +52,40 @@ public class Candidate {
     this.dropped = dropped;
   }
 
+  @NotNull
+  @Size(min = 2, max = 255)
+  public String getName() {
+    return name;
+  }
+
   public void setName(String name) {
     this.name = name;
   }
 
-  public String getName() {
-    return name;
+  @NotNull
+  public Peasant getPeasant() {
+    return peasant;
   }
 
   void setPeasant(Peasant peasant) {
     this.peasant = peasant;
   }
 
-  public Peasant getPeasant() {
-    return peasant;
+  public LocalDateTime getDropped() {
+    return dropped;
   }
 
   public void setDropped(LocalDateTime dropped) {
     this.dropped = dropped;
   }
 
-  public LocalDateTime getDropped() {
-    return dropped;
+  // TODO unmodifiable set (pp 44)
+  public Set<Vote> getVotes() {
+    return votes;
   }
 
   private void setVotes(Set<Vote> votes) {
     this.votes = votes;
-  }
-
-  // TODO unmodifiable set (pp 44)
-  public Set<Vote> getVotes() {
-    return votes;
   }
 
   /**

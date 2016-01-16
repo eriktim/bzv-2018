@@ -11,6 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -20,21 +21,13 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Min(2000)
   private int year;
 
-  @NotBlank
   private String name;
 
-  @Email
-  @NotBlank
   private String email;
 
   @JsonIgnore
-  @NotBlank
-  @Size(min = 60, max = 60)
-  // TODO regex
-  // TODO setter, i.e. password -> hash
   private String hash;
 
   private Set<Vote> votes = new HashSet<Vote>();
@@ -56,45 +49,54 @@ public class User {
     setHash(hash);
   }
 
+  @Min(2000)
+  public int getYear() {
+    return year;
+  }
+
   public void setYear(int year) {
     this.year = year;
   }
 
-  public int getYear() {
-    return year;
+  @NotNull
+  @Size(min = 2, max = 255)
+  public String getName() {
+    return name;
   }
 
   public void setName(String name) {
     this.name = name;
   }
 
-  public String getName() {
-    return name;
+  @Email
+  @NotBlank
+  public String getEmail() {
+    return email;
   }
 
   public void setEmail(String email) {
     this.email = email;
   }
 
-  public String getEmail() {
-    return email;
+  @NotNull
+  @Size(min = 60, max = 60)
+  // TODO regex
+  // TODO setter, i.e. password -> hash
+  private String getHash() {
+    return hash;
   }
 
   public void setHash(String hash) {
     this.hash = hash;
   }
 
-  private String getHash() {
-    return hash;
+  // TODO unmodifiable set (pp 44)
+  public Set<Vote> getVotes() {
+    return votes;
   }
 
   private void setVotes(Set<Vote> votes) {
     this.votes = votes;
-  }
-
-  // TODO unmodifiable set (pp 44)
-  public Set<Vote> getVotes() {
-    return votes;
   }
 
   /**

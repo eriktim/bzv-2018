@@ -33,31 +33,23 @@ public class Vote {
 
   @ManyToOne
   @RestResource(exported = false)
-  @NotNull
   private User user;
 
   @ManyToOne
   @RestResource(exported = false)
-  @NotNull
   private Candidate candidate;
 
   @ManyToOne
   @RestResource(exported = false)
-  @NotNull
   private Period period;
 
-  @NotNull
   private Type type;
 
   @NotNull
   private LocalDateTime update;
 
-  @Min(0)
-  @Max(5)
   private int points;
 
-  @Min(0)
-  @Max(5)
   private int bonusPoints;
 
   @PrePersist
@@ -111,51 +103,59 @@ public class Vote {
     return period == null || this.bonusPoints == 0 || this.bonusPoints == period.getNumberOfVotes();
   }
 
+  @NotNull
+  public User getUser() {
+    return user;
+  }
+
   public void setUser(User user) {
     this.user = user;
   }
 
-  public User getUser() {
-    return user;
+  @NotNull
+  public Candidate getCandidate() {
+    return candidate;
   }
 
   public void setCandidate(Candidate candidate) {
     this.candidate = candidate;
   }
 
-  public Candidate getCandidate() {
-    return candidate;
+  @NotNull
+  public Period getPeriod() {
+    return period;
   }
 
   public void setPeriod(Period period) {
     this.period = period;
   }
 
-  public Period getPeriod() {
-    return period;
+  @NotNull
+  public Type getType() {
+    return type;
   }
 
   public void setType(Type type) {
     this.type = type;
   }
 
-  public Type getType() {
-    return type;
+  @Min(0)
+  @Max(5)
+  public int getPoints() {
+    return points;
   }
 
   public void setPoints(int points) {
     this.points = points;
   }
 
-  public int getPoints() {
-    return points;
+  @Min(0)
+  @Max(5)
+  public int getBonusPoints() {
+    return bonusPoints;
   }
 
   public void setBonusPoints(int bonusPoints) {
     this.bonusPoints = bonusPoints;
-  }
-
-  public int getBonusPoints() {
-    return bonusPoints;
   }
 }

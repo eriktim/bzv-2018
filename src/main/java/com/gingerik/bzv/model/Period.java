@@ -19,19 +19,14 @@ public class Period {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Min(2000)
   private int year;
 
-  @NotNull
   private LocalDateTime start;
 
-  @NotNull
   private LocalDateTime end;
 
   private LocalDateTime reference;
 
-  @Min(1)
-  @Max(5)
   private int numberOfVotes;
 
   private Set<Vote> votes = new HashSet<Vote>();
@@ -62,52 +57,57 @@ public class Period {
         && (reference == null || reference.isAfter(end));
   }
 
+  @Min(2000)
+  public int getYear() {
+    return year;
+  }
+
   public void setYear(int year) {
     this.year = year;
   }
 
-  public int getYear() {
-    return year;
+  @NotNull
+  public LocalDateTime getStart() {
+    return start;
   }
 
   public void setStart(LocalDateTime start) {
     this.start = start;
   }
 
-  public LocalDateTime getStart() {
-    return start;
+  @NotNull
+  public LocalDateTime getEnd() {
+    return end;
   }
 
   public void setEnd(LocalDateTime end) {
     this.end = end;
   }
 
-  public LocalDateTime getEnd() {
-    return end;
+  public LocalDateTime getReference() {
+    return reference;
   }
 
   public void setReference(LocalDateTime reference) {
     this.reference = reference;
   }
 
-  public LocalDateTime getReference() {
-    return reference;
+  @Min(1)
+  @Max(5)
+  public int getNumberOfVotes() {
+    return numberOfVotes;
   }
 
   public void setNumberOfVotes(int numberOfVotes) {
     this.numberOfVotes = numberOfVotes;
   }
 
-  public int getNumberOfVotes() {
-    return numberOfVotes;
+  public Set<Vote> getVotes() {
+    return votes;
   }
 
   private void setVotes(Set<Vote> votes) {
     this.votes = votes;
-  }
-
-  public Set<Vote> getVotes() {
-    return votes;
   }
 
   /**
@@ -124,4 +124,5 @@ public class Period {
     getVotes().add(vote);
     vote.setPeriod(this);
   }
+
 }

@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Peasant {
@@ -19,10 +20,8 @@ public class Peasant {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @Min(2000)
   private int year;
 
-  @NotBlank
   private String name;
 
   @OneToMany
@@ -42,29 +41,32 @@ public class Peasant {
     this.name = name;
   }
 
+  @Min(2000)
+  public int getYear() {
+    return year;
+  }
+
   public void setYear(int year) {
     this.year = year;
   }
 
-  public int getYear() {
-    return year;
+  @NotNull
+  @Size(min = 2, max = 255)
+  public String getName() {
+    return name;
   }
 
   public void setName(String name) {
     this.name = name;
   }
 
-  public String getName() {
-    return name;
+  // TODO unmodifiable set (pp 44)
+  public Set<Candidate> getCandidates() {
+    return candidates;
   }
 
   private void setCandidates(Set<Candidate> candidates) {
     this.candidates = candidates;
-  }
-
-  // TODO unmodifiable set (pp 44)
-  public Set<Candidate> getCandidates() {
-    return candidates;
   }
 
   /**
