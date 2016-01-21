@@ -26,6 +26,34 @@ public class PeriodTest {
     validator = factory.getValidator();
   }
 
+  @Test()
+  public void startNotNull() {
+    Period period = new Period(2000, null, t1, t2, 1);
+
+    Set<ConstraintViolation<Period>> constraintViolations =
+        validator.validate(period);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "may not be null",
+        constraintViolations.iterator().next().getMessage()
+    );
+  }
+
+  @Test()
+  public void endNotNull() {
+    Period period = new Period(2000, t0, null, t2, 1);
+
+    Set<ConstraintViolation<Period>> constraintViolations =
+        validator.validate(period);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "may not be null",
+        constraintViolations.iterator().next().getMessage()
+    );
+  }
+
   @Test
   public void yearTooLow() {
     Period period = new Period(1900, t0, t1, t2, 1);

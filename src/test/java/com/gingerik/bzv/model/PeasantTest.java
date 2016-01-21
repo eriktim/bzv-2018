@@ -21,6 +21,20 @@ public class PeasantTest {
     validator = factory.getValidator();
   }
 
+  @Test()
+  public void nameNotNull() {
+    Peasant peasant = new Peasant(2000, null);
+
+    Set<ConstraintViolation<Peasant>> constraintViolations =
+        validator.validate(peasant);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "may not be null",
+        constraintViolations.iterator().next().getMessage()
+    );
+  }
+
   @Test
   public void yearTooLow() {
     Peasant peasant = new Peasant(1900, "Peasant");

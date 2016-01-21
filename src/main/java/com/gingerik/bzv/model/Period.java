@@ -52,9 +52,9 @@ public class Period {
   }
 
   @AssertTrue(message = "period dates should be valid")
-  private boolean isValid() {
-    return end.isAfter(start)
-        && (reference == null || reference.isAfter(end));
+  private boolean isValidRange() {
+    return end == null || start == null || (end.isAfter(start)
+        && (reference == null || reference.isAfter(end)));
   }
 
   @Min(2000)

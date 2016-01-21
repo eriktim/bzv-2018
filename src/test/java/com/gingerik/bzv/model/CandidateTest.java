@@ -24,6 +24,25 @@ public class CandidateTest {
     peasant = new Peasant(2000, "Peasant");
   }
 
+  @Test()
+  public void nameNotNull() {
+    Candidate candidate = new Candidate(null, peasant);
+
+    Set<ConstraintViolation<Candidate>> constraintViolations =
+        validator.validate(candidate);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "may not be null",
+        constraintViolations.iterator().next().getMessage()
+    );
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void peasantNotNull() {
+    new Candidate("Candidate", null);
+  }
+
   @Test
   public void nameMinSize() {
     Candidate candidate = new Candidate("", peasant);

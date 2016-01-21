@@ -26,7 +26,7 @@ public class VoteTest {
   @BeforeClass
   public static void setUp() throws ParseException {
     ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    LocalDateTime now = LocalDateTime.now();
+    final LocalDateTime now = LocalDateTime.now();
     validator = factory.getValidator();
     peasant = new Peasant(2000, "Peasant");
     candidate = new Candidate("Candidate", peasant);
@@ -44,6 +44,21 @@ public class VoteTest {
         now.minusDays(1),
         1);
     user = new User(2000, "User", UserTest.EMAIL, UserTest.HASH);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void userNotNull() {
+    new Vote(null, candidate, period, null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void candidateNotNull() {
+    new Vote(user, null, period, null);
+  }
+
+  @Test(expected = NullPointerException.class)
+  public void periodNotNull() {
+    new Vote(user, candidate, null, null);
   }
 
   @Test

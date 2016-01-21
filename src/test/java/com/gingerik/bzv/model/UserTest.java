@@ -23,6 +23,48 @@ public class UserTest {
     validator = factory.getValidator();
   }
 
+  @Test()
+  public void nameNotNull() {
+    User user = new User(2000, null, EMAIL, HASH);
+
+    Set<ConstraintViolation<User>> constraintViolations =
+        validator.validate(user);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "may not be null",
+        constraintViolations.iterator().next().getMessage()
+    );
+  }
+
+  @Test()
+  public void emailNotNull() {
+    User user = new User(2000, "User", null, HASH);
+
+    Set<ConstraintViolation<User>> constraintViolations =
+        validator.validate(user);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "may not be empty",
+        constraintViolations.iterator().next().getMessage()
+    );
+  }
+
+  @Test()
+  public void hashNotNull() {
+    User user = new User(2000, "User", EMAIL, null);
+
+    Set<ConstraintViolation<User>> constraintViolations =
+        validator.validate(user);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "may not be null",
+        constraintViolations.iterator().next().getMessage()
+    );
+  }
+
   @Test
   public void yearTooLow() {
     User user = new User(1900, "User", EMAIL, HASH);
