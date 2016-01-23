@@ -1,7 +1,6 @@
 package com.gingerik.bzv.model;
 
-import org.hibernate.validator.constraints.NotBlank;
-
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Entity;
@@ -14,7 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Peasant {
+public class Peasant implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

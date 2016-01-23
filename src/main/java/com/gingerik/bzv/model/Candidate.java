@@ -1,8 +1,6 @@
 package com.gingerik.bzv.model;
 
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.data.rest.core.annotation.RestResource;
-
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Candidate {
+public class Candidate implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +22,6 @@ public class Candidate {
   private String name;
 
   @ManyToOne
-  @RestResource(exported = false)
   private Peasant peasant;
 
   private LocalDateTime dropped;

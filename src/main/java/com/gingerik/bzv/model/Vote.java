@@ -1,23 +1,26 @@
 package com.gingerik.bzv.model;
 
 import org.apache.log4j.Logger;
-import org.springframework.data.rest.core.annotation.RestResource;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.EnumType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Transient;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class Vote {
+public class Vote implements Serializable {
 
   public enum Type {
     LOVE,
@@ -32,24 +35,24 @@ public class Vote {
   private long id;
 
   @ManyToOne
-  @RestResource(exported = false)
   private User user;
 
   @ManyToOne
-  @RestResource(exported = false)
   private Candidate candidate;
 
   @ManyToOne
-  @RestResource(exported = false)
   private Period period;
 
+  @Enumerated(EnumType.STRING)
   private Type type;
 
   @NotNull
   private LocalDateTime update;
 
+  @Transient
   private int points;
 
+  @Transient
   private int bonusPoints;
 
   @PrePersist

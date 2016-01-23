@@ -1,5 +1,6 @@
 package com.gingerik.bzv.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -13,7 +14,7 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
-public class Period {
+public class Period implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
