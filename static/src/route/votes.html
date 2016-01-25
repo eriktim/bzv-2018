@@ -1,4 +1,6 @@
 <template>
+  <require from="../date-format"></require>
+
   <div if.bind="!votes.length">(geen stemmen)</div>
   <div if.bind="votes.length">
     <ul class="nav nav-pills" repeat.for="peasant of peasants">
@@ -18,7 +20,7 @@
       </thead>
       <tbody>
       <tr repeat.for="period of periods">
-        <td>${period.end}</td>
+        <td>${period.end | dateFormat}</td>
         <td repeat.for="candidate of theCandidates">
           ${voteMap.get(period).get(candidate).points}
         </td>
