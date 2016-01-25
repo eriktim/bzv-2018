@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -22,15 +23,23 @@ public class User implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
+  @Min(2000)
   private int year;
 
+  @NotNull
+  @Size(min = 2, max = 255)
   private String name;
 
+  @NotBlank
+  @Email
   private String email;
 
   @JsonIgnore
+  @NotNull
+  @Size(min = 60, max = 60)
   private String hash;
 
+  @OneToMany
   private Set<Vote> votes = new HashSet<Vote>();
 
   private User() {
@@ -50,7 +59,6 @@ public class User implements Serializable {
     setHash(hash);
   }
 
-  @Min(2000)
   public int getYear() {
     return year;
   }
@@ -59,8 +67,6 @@ public class User implements Serializable {
     this.year = year;
   }
 
-  @NotNull
-  @Size(min = 2, max = 255)
   public String getName() {
     return name;
   }
@@ -69,8 +75,6 @@ public class User implements Serializable {
     this.name = name;
   }
 
-  @Email
-  @NotBlank
   public String getEmail() {
     return email;
   }
@@ -79,8 +83,6 @@ public class User implements Serializable {
     this.email = email;
   }
 
-  @NotNull
-  @Size(min = 60, max = 60)
   // TODO regex
   // TODO setter, i.e. password -> hash
   private String getHash() {

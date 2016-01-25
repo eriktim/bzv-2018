@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -19,21 +20,24 @@ public class Candidate implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
+  @NotNull
+  @Size(min = 2, max = 255)
   private String name;
+  @NotNull
 
   @ManyToOne
   private Peasant peasant;
 
   private LocalDateTime dropped;
 
+  @OneToMany
   private Set<Vote> votes = new HashSet<Vote>();
 
   private Candidate() {
   }
 
   public Candidate(String name, Peasant peasant) {
-    this.name = name;
-    peasant.addCandidate(this);
+    this(name, peasant, null);
   }
 
   /**
@@ -45,12 +49,12 @@ public class Candidate implements Serializable {
    */
   public Candidate(String name, Peasant peasant, LocalDateTime dropped) {
     this.name = name;
-    peasant.addCandidate(this);
+    if (peasant != null) {
+      peasant.addCandidate(this);
+    }
     this.dropped = dropped;
   }
 
-  @NotNull
-  @Size(min = 2, max = 255)
   public String getName() {
     return name;
   }
@@ -59,7 +63,6 @@ public class Candidate implements Serializable {
     this.name = name;
   }
 
-  @NotNull
   public Peasant getPeasant() {
     return peasant;
   }

@@ -38,9 +38,18 @@ public class CandidateTest {
     );
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test()
   public void peasantNotNull() {
-    new Candidate("Candidate", null);
+    Candidate candidate = new Candidate("Candidate", null);
+
+    Set<ConstraintViolation<Candidate>> constraintViolations =
+        validator.validate(candidate);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "may not be null",
+        constraintViolations.iterator().next().getMessage()
+    );
   }
 
   @Test

@@ -19,8 +19,11 @@ public class Peasant implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
+  @Min(2000)
   private int year;
 
+  @NotNull
+  @Size(min = 2, max = 255)
   private String name;
 
   @OneToMany
@@ -40,7 +43,6 @@ public class Peasant implements Serializable {
     this.name = name;
   }
 
-  @Min(2000)
   public int getYear() {
     return year;
   }
@@ -49,8 +51,6 @@ public class Peasant implements Serializable {
     this.year = year;
   }
 
-  @NotNull
-  @Size(min = 2, max = 255)
   public String getName() {
     return name;
   }

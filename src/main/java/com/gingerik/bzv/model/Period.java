@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -20,16 +21,22 @@ public class Period implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
+  @Min(2000)
   private int year;
 
+  @NotNull
   private LocalDateTime start;
 
+  @NotNull
   private LocalDateTime end;
 
   private LocalDateTime reference;
 
+  @Min(1)
+  @Max(5)
   private int numberOfVotes;
 
+  @OneToMany
   private Set<Vote> votes = new HashSet<Vote>();
 
   private Period() {
@@ -58,7 +65,6 @@ public class Period implements Serializable {
         && (reference == null || reference.isAfter(end)));
   }
 
-  @Min(2000)
   public int getYear() {
     return year;
   }
@@ -67,7 +73,6 @@ public class Period implements Serializable {
     this.year = year;
   }
 
-  @NotNull
   public LocalDateTime getStart() {
     return start;
   }
@@ -76,7 +81,6 @@ public class Period implements Serializable {
     this.start = start;
   }
 
-  @NotNull
   public LocalDateTime getEnd() {
     return end;
   }
@@ -93,8 +97,6 @@ public class Period implements Serializable {
     this.reference = reference;
   }
 
-  @Min(1)
-  @Max(5)
   public int getNumberOfVotes() {
     return numberOfVotes;
   }

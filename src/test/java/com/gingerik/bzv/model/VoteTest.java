@@ -46,19 +46,46 @@ public class VoteTest {
     user = new User(2000, "User", UserTest.EMAIL, UserTest.HASH);
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void userNotNull() {
-    new Vote(null, candidate, period, null);
+    Vote vote = new Vote(null, candidate, period, Vote.Type.GOOD);
+
+    Set<ConstraintViolation<Vote>> constraintViolations =
+        validator.validate(vote);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "may not be null",
+        constraintViolations.iterator().next().getMessage()
+    );
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void candidateNotNull() {
-    new Vote(user, null, period, null);
+    Vote vote = new Vote(user, null, period, Vote.Type.GOOD);
+
+    Set<ConstraintViolation<Vote>> constraintViolations =
+        validator.validate(vote);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "may not be null",
+        constraintViolations.iterator().next().getMessage()
+    );
   }
 
-  @Test(expected = NullPointerException.class)
+  @Test
   public void periodNotNull() {
-    new Vote(user, candidate, null, null);
+    Vote vote = new Vote(user, candidate, null, Vote.Type.GOOD);
+
+    Set<ConstraintViolation<Vote>> constraintViolations =
+        validator.validate(vote);
+
+    assertEquals(1, constraintViolations.size());
+    assertEquals(
+        "may not be null",
+        constraintViolations.iterator().next().getMessage()
+    );
   }
 
   @Test

@@ -34,24 +34,32 @@ public class Vote implements Serializable {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
+  @NotNull
   @ManyToOne
   private User user;
 
+  @NotNull
   @ManyToOne
   private Candidate candidate;
 
+  @NotNull
   @ManyToOne
   private Period period;
 
+  @NotNull
   @Enumerated(EnumType.STRING)
   private Type type;
 
   @NotNull
   private LocalDateTime update;
 
+  @Min(0)
+  @Max(5)
   @Transient
   private int points;
 
+  @Min(0)
+  @Max(5)
   @Transient
   private int bonusPoints;
 
@@ -76,9 +84,15 @@ public class Vote implements Serializable {
    * @param type Type of vote
    */
   public Vote(User user, Candidate candidate, Period period, Type type) {
-    user.addVote(this);
-    candidate.addVote(this);
-    period.addVote(this);
+    if (user != null) {
+      user.addVote(this);
+    }
+    if (candidate != null) {
+      candidate.addVote(this);
+    }
+    if (period != null) {
+      period.addVote(this);
+    }
     this.type = type;
     this.points = 0;
     this.bonusPoints = 0;
@@ -106,7 +120,6 @@ public class Vote implements Serializable {
     return period == null || this.bonusPoints == 0 || this.bonusPoints == period.getNumberOfVotes();
   }
 
-  @NotNull
   public User getUser() {
     return user;
   }
@@ -115,7 +128,6 @@ public class Vote implements Serializable {
     this.user = user;
   }
 
-  @NotNull
   public Candidate getCandidate() {
     return candidate;
   }
@@ -124,7 +136,6 @@ public class Vote implements Serializable {
     this.candidate = candidate;
   }
 
-  @NotNull
   public Period getPeriod() {
     return period;
   }
@@ -133,7 +144,6 @@ public class Vote implements Serializable {
     this.period = period;
   }
 
-  @NotNull
   public Type getType() {
     return type;
   }
@@ -142,8 +152,6 @@ public class Vote implements Serializable {
     this.type = type;
   }
 
-  @Min(0)
-  @Max(5)
   public int getPoints() {
     return points;
   }
@@ -152,8 +160,6 @@ public class Vote implements Serializable {
     this.points = points;
   }
 
-  @Min(0)
-  @Max(5)
   public int getBonusPoints() {
     return bonusPoints;
   }
