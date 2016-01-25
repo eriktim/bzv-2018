@@ -11,6 +11,6 @@ export class Rank {
 
   activate() {
     this.dataService.fetchUsers()
-      .then(users => {this.users = users});
+      .then(users => this.users = users);
   }
 }

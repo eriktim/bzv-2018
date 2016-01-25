@@ -25,4 +25,20 @@ export class DataService {
         return users.sort((a,b) => a.points.totalPoints <= b.points.totalPoints);
       });
   }
+
+  fetchVotes() {
+    return this.fetch(`${authConfig.baseUrl}/vote`);
+  }
+
+  fetchPeasants() {
+    return this.fetch(`${authConfig.baseUrl}/peasant`);
+  }
+
+  fetchCandidates() {
+    return this.fetch(`${authConfig.baseUrl}/candidate`);
+  }
+
+  fetchPeriods() {
+    return this.fetch(`${authConfig.baseUrl}/period`);
+  }
 }

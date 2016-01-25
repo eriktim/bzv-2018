@@ -2,25 +2,27 @@
   <div if.bind="!votes.length">(geen stemmen)</div>
   <div if.bind="votes.length">
     <ul class="nav nav-pills" repeat.for="peasant of peasants">
-      <li role="presentation" class="active">
-        <a href="#">${peasant.name}</a>
+      <li role="presentation" class.bind="peasant._id == thePeasant._id ? 'active' : ''">
+        <a href="#" click.delegate="select(peasant)">${peasant.name}</a>
       </li>
     </ul>
     <table class="table table-striped">
       <thead>
       <tr>
-        <td>&nbsp;</td>
-        <th repeat.for="candidate of candidates">
+        <td></td>
+        <th repeat.for="candidate of theCandidates">
           ${candidate.name}
         </th>
         <th><em>totaal</em></th>
       </tr>
       </thead>
       <tbody>
-      <tr repeat.for="vote of votes">
-        <td>${vote.end}</td>
-        <td repeat.for="candidate of candidates">
+      <tr repeat.for="period of periods">
+        <td>${period.end}</td>
+        <td repeat.for="candidate of theCandidates">
+          ${voteMap.get(period).get(candidate).points}
         </td>
+        <td></td>
       </tr>
       </tbody>
     </table>
