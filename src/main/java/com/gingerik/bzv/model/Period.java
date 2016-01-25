@@ -9,6 +9,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -25,11 +27,14 @@ public class Period implements Serializable {
   private int year;
 
   @NotNull
+  @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime start;
 
   @NotNull
+  @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime end;
 
+  @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime reference;
 
   @Min(1)

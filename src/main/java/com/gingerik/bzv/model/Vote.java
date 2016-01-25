@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Max;
@@ -51,6 +53,7 @@ public class Vote implements Serializable {
   private Type type;
 
   @NotNull
+  @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime update;
 
   @Min(0)
