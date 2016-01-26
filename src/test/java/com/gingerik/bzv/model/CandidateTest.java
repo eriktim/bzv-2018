@@ -11,6 +11,7 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class CandidateTest {
 
@@ -87,4 +88,35 @@ public class CandidateTest {
 
     assertEquals(0, constraintViolations.size());
   }
+
+  @Test
+  public void candidateIsLover() {
+    Peasant peasant = new Peasant(2000, "Peasant");
+    Candidate candidate = new Candidate("Candidate", peasant);
+
+    assertEquals(candidate, peasant.getLover().orElse(null));
+    assertEquals(true, candidate.isLover());
+  }
+
+  @Test
+  public void candidateIsNoLover() {
+    Peasant peasant = new Peasant(2000, "Peasant");
+    Candidate candidate = new Candidate("Candidate", peasant, LocalDateTime.now());
+
+    assertNotEquals(null, peasant.getLover().orElse(null));
+    assertNotEquals(candidate, peasant.getLover().orElse(null));
+    assertEquals(false, candidate.isLover());
+  }
+
+  @Test
+  public void candidatesCanBeLovers() {
+    Peasant peasant = new Peasant(2000, "Peasant");
+    Candidate candidateA = new Candidate("CandidateA", peasant);
+    Candidate candidateB = new Candidate("CandidateB", peasant);
+
+    assertEquals(null, peasant.getLover().orElse(null));
+    assertEquals(false, candidateA.isLover());
+    assertEquals(false, candidateA.isLover());
+  }
+
 }

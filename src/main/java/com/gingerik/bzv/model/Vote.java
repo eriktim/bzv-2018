@@ -1,9 +1,12 @@
 package com.gingerik.bzv.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.log4j.Logger;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
@@ -17,8 +20,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -56,15 +57,15 @@ public class Vote implements Serializable {
   @Temporal(TemporalType.TIMESTAMP)
   private LocalDateTime update;
 
-  @Min(0)
-  @Max(5)
+  @JsonIgnore
   @Transient
-  private int points;
+  private boolean disabledCache;
 
-  @Min(0)
-  @Max(5)
   @Transient
-  private int bonusPoints;
+  private Integer points;
+
+  @Transient
+  private Integer bonusPoints;
 
   @PrePersist
   public void onCreate() {
@@ -97,9 +98,8 @@ public class Vote implements Serializable {
       period.addVote(this);
     }
     this.type = type;
-    this.points = 0;
-    this.bonusPoints = 0;
     this.update = LocalDateTime.now();
+    this.disabledCache = true;
   }
 
   @AssertTrue(message = "vote should be within the period")
@@ -115,12 +115,13 @@ public class Vote implements Serializable {
 
   @AssertTrue(message = "points must not exceed number of candidates")
   private boolean isValidPoints() {
-    return period == null || this.points <= period.getNumberOfVotes() * 2 + 1;
+    return period == null || points == null || points <= period.getNumberOfVotes() * 2 + 1;
   }
 
   @AssertTrue(message = "bonusPoints must not exceed number of candidates")
   private boolean isValidBonusPoints() {
-    return period == null || this.bonusPoints == 0 || this.bonusPoints == period.getNumberOfVotes();
+    return period == null || bonusPoints == null
+        || bonusPoints == 0 || bonusPoints == period.getNumberOfVotes();
   }
 
   public User getUser() {
@@ -155,19 +156,64 @@ public class Vote implements Serializable {
     this.type = type;
   }
 
+  /**
+   * Get points earned with this vote.
+   * @return Number of points
+   */
   public int getPoints() {
+    synchronized (this) {
+      if (points == null || disabledCache) {
+        points = 0;
+        Period period = getPeriod();
+        LocalDateTime reference = period.getReference();
+        if (reference != null) {
+          LocalDateTime dropped = getCandidate().getDropped();
+          if (dropped == null) {
+            if (!Type.BAD.equals(type)) {
+              if (LocalDateTime.now().isAfter(reference)) {
+                points = 1;
+              }
+            }
+          } else {
+            if (Type.BAD.equals(type)) {
+              if (dropped.isAfter(period.getStart()) && dropped.isBefore(reference)) {
+                points = 1;
+              }
+            }
+          }
+        }
+      }
+    }
     return points;
   }
 
-  public void setPoints(int points) {
-    this.points = points;
-  }
-
+  /**
+   * Get bonus points earned with this vote.
+   * @return Number of bonus points
+   */
   public int getBonusPoints() {
+    synchronized (this) {
+      if (bonusPoints == null || disabledCache) {
+        bonusPoints = 0;
+        if (Type.LOVE.equals(type)) {
+          if (candidate.isLover()) {
+            bonusPoints = getPeriod().getNumberOfVotes();
+          }
+        } else {
+          Peasant peasant = candidate.getPeasant();
+          Candidate lover = peasant.getLover().orElse(null);
+          if (lover != null && !peasant.getCandidates().contains(lover)) {
+            Set<Vote> loveVotes = period.getVotes().stream()
+                .filter(v -> v.getUser().equals(user))
+                .filter(v -> Type.LOVE.equals(v.type))
+                .collect(Collectors.toSet());
+            if (loveVotes.size() == 0) {
+              bonusPoints = 1;
+            }
+          }
+        }
+      }
+    }
     return bonusPoints;
-  }
-
-  public void setBonusPoints(int bonusPoints) {
-    this.bonusPoints = bonusPoints;
   }
 }

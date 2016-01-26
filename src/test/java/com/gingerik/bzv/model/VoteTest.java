@@ -1,3 +1,5 @@
+// TODO simplify (bonus)points tests
+
 package com.gingerik.bzv.model;
 
 import org.junit.BeforeClass;
@@ -142,4 +144,86 @@ public class VoteTest {
     assertEquals(true, candidate.getVotes().contains(vote));
     assertEquals(true, period.getVotes().contains(vote));
   }
+
+  @Test
+  public void loveBonus() {
+    final LocalDateTime now = LocalDateTime.now();
+    Peasant peasant = new Peasant(2000, "Peasant");
+    Candidate candidateA = new Candidate("CandidateA", peasant);
+    Candidate candidateB = new Candidate("CandidateB", peasant, now.minusDays(2));
+    Candidate candidateC = new Candidate("CandidateC", peasant, now.minusDays(5));
+    Period period = new Period(
+        2000,
+        now.minusDays(3),
+        now.minusDays(1),
+        now.minusHours(1),
+        2);
+
+    Vote voteA = new Vote(user, candidateA, period, Vote.Type.LOVE);
+
+    assertEquals(1, voteA.getPoints());
+    assertEquals(2, voteA.getBonusPoints());
+
+    Vote voteB = new Vote(user, candidateB, period, Vote.Type.BAD);
+    Vote voteC = new Vote(user, candidateC, period, Vote.Type.BAD);
+
+    assertEquals(1, voteA.getPoints());
+    assertEquals(2, voteA.getBonusPoints());
+  }
+
+  @Test
+  public void noLoveBonus() {
+    final LocalDateTime now = LocalDateTime.now();
+    Peasant peasant = new Peasant(2000, "Peasant");
+    Candidate candidateA = new Candidate("CandidateA", peasant, now.minusDays(2));
+    Candidate candidateB = new Candidate("CandidateB", peasant, now.minusDays(2));
+    Candidate candidateC = new Candidate("CandidateC", peasant, now.minusDays(2));
+    Period period = new Period(
+        2000,
+        now.minusDays(3),
+        now.minusDays(1),
+        now.minusHours(1),
+        2);
+
+    Vote voteA = new Vote(user, candidateA, period, Vote.Type.BAD);
+
+    assertEquals(1, voteA.getPoints());
+    assertEquals(1, voteA.getBonusPoints());
+
+    Vote voteB = new Vote(user, candidateB, period, Vote.Type.GOOD);
+
+    assertEquals(1, voteA.getPoints());
+    assertEquals(1, voteA.getBonusPoints());
+
+    Vote voteC = new Vote(user, candidateC, period, Vote.Type.LOVE);
+
+    assertEquals(1, voteA.getPoints());
+    assertEquals(0, voteA.getBonusPoints());
+  }
+
+  @Test
+  public void goodBonus() {
+    final LocalDateTime now = LocalDateTime.now();
+    Peasant peasant = new Peasant(2000, "Peasant");
+    Candidate candidateA = new Candidate("CandidateA", peasant);
+    Candidate candidateB = new Candidate("CandidateB", peasant);
+    Candidate candidateC = new Candidate("CandidateC", peasant);
+    Period period = new Period(
+        2000,
+        now.minusDays(3),
+        now.minusDays(1),
+        now.minusHours(1),
+        2);
+
+    Vote voteA = new Vote(user, candidateA, period, Vote.Type.GOOD);
+
+    assertEquals(1, voteA.getPoints());
+    assertEquals(0, voteA.getBonusPoints());
+
+    Vote voteB = new Vote(user, candidateB, period, Vote.Type.GOOD);
+
+    assertEquals(1, voteA.getPoints());
+    assertEquals(0, voteA.getBonusPoints());
+  }
+
 }

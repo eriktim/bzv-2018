@@ -2,12 +2,16 @@ package com.gingerik.bzv.model;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -28,6 +32,9 @@ public class Peasant implements Serializable {
 
   @OneToMany
   private Set<Candidate> candidates = new HashSet<Candidate>();
+
+  @Transient
+  private Optional<Candidate> lover;
 
   private Peasant() {
   }
@@ -81,6 +88,22 @@ public class Peasant implements Serializable {
     }
     getCandidates().add(candidate);
     candidate.setPeasant(this);
+  }
+
+  Optional<Candidate> getLover() {
+    synchronized (this) {
+      if (lover == null) {
+        Set<Candidate> candidatesInTheRunning =
+            candidates.stream().filter(c -> c.getDropped() == null).collect(Collectors.toSet());
+        if (candidatesInTheRunning.size() > 0) {
+          lover = candidatesInTheRunning.size() == 1
+              ? Optional.of(candidatesInTheRunning.iterator().next()) : Optional.empty();
+        } else {
+          lover = Optional.of(new Candidate("<UnknownLover>", null));
+        }
+      }
+    }
+    return lover;
   }
 
 }

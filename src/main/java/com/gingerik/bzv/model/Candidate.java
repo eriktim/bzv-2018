@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -35,6 +36,9 @@ public class Candidate implements Serializable {
 
   @OneToMany
   private Set<Vote> votes = new HashSet<Vote>();
+
+  @Transient
+  private Boolean isLover;
 
   private Candidate() {
   }
@@ -102,8 +106,21 @@ public class Candidate implements Serializable {
     if (vote.getCandidate() != null) {
       throw new IllegalStateException("vote is already assigned to a candidate");
     }
-    getVotes().add(vote);
+    votes.add(vote);
     vote.setCandidate(this);
+  }
+
+  /**
+   * Flag indicating this candidate was chosen by its peasant.
+   * @return boolean
+   */
+  public boolean isLover() {
+    synchronized (this) {
+      if (isLover == null) {
+        isLover = peasant != null && equals(peasant.getLover().orElse(null));
+      }
+    }
+    return isLover;
   }
 
 }
